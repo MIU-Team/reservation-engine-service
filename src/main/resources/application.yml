@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: reservation-engine-service
+  datasource:
+    url: jdbc:mysql://localhost/reservation_system?serverTimezone=UTC
+    username: root
+    password: password
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
