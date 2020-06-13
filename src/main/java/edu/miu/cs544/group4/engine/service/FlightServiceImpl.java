@@ -7,4 +7,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, Flight, Integer> implements FlightService {
+  @Override
+  public FlightResponse create(Flight flight) {
+    return convertEntityToResponse(baseRepository.save(flight));
+  }
 }

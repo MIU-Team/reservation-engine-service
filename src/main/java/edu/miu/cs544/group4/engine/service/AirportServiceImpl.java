@@ -7,4 +7,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AirportServiceImpl extends BaseReadWriteServiceImpl<AirportResponse, Airport, Integer> implements AirportService {
+  @Override
+  public AirportResponse create(Airport airport) {
+    return convertEntityToResponse(baseRepository.save(airport));
+  }
 }

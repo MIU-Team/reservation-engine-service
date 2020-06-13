@@ -6,4 +6,5 @@ import edu.miu.cs544.group4.engine.service.response.AirlineResponse;
 import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 
 public interface AirportService extends BaseReadWriteService<AirportResponse, Airport, Integer> {
+  AirportResponse create(Airport airport);
 }

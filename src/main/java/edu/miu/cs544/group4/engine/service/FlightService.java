@@ -7,5 +7,5 @@ import edu.miu.cs544.group4.engine.service.response.AirlineResponse;
 import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 
 public interface FlightService extends BaseReadWriteService<FlightResponse, Flight, Integer> {
-
+  FlightResponse create(Flight flight);
 }
