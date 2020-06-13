@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -16,8 +15,8 @@ public class FlightResponse implements Serializable {
     private Integer id;
     private Integer capacity;
     private String flightNumber;
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
+    private Date departureTime;
+    private Date arrivalTime;
     private AirlineResponse airline;
     private AirportResponse origin;
     private AirportResponse destination;

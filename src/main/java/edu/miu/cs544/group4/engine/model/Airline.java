@@ -16,10 +16,10 @@ public class Airline implements Serializable {
     @Id
     @GeneratedValue
     private Integer id;
-    private String code;
     @Column(length = 2)
+    private String code;
     private String name;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private History history;
     @Embedded
     private Address address;

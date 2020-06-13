@@ -23,9 +23,9 @@ public class Flight implements Serializable {
     @Column(length = 4)
     private String flightNumber;
     @Temporal(TemporalType.TIME)
-    private LocalDateTime departureTime;
+    private Date departureTime;
     @Temporal(TemporalType.TIME)
-    private LocalDateTime arrivalTime;
+    private Date arrivalTime;
     @ManyToOne
     @JoinColumn(name = "airline_id")
     private Airline airline;

@@ -10,9 +10,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddressResponse implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private String street;
-    private String city;
-    private Integer zip;
-    private String state;
+  private static final long serialVersionUID = 1L;
+  private String street;
+  private String city;
+  private Integer zip;
+  private String state;
 }

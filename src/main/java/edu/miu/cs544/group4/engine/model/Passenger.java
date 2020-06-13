@@ -4,9 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Data
@@ -20,7 +25,7 @@ public class Passenger implements Serializable {
     private String firstName;
     private String lastName;
     @Temporal(TemporalType.DATE)
-    private LocalDate dateOfBirth;
+    private Date dateOfBirth;
     private String email;
     @Embedded
     private Address address;

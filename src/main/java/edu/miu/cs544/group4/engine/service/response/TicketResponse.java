@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 public class TicketResponse {
     private Integer id;
     private String ticketNumber;
-    private LocalDate flightDate;
+    private Date flightDate;
     private ReservationResponse reservation;
     private PassengerResponse passenger;
 }

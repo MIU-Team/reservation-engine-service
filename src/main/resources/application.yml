@@ -17,3 +17,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+
+  cloud:
+      consul:
+        discovery:
+          healthCheckPath: /my-health-check
+          healthCheckInterval: 20s

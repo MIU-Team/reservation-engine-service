@@ -5,9 +5,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -22,7 +29,7 @@ public class Reservation implements Serializable {
     private String code;
     @Temporal(TemporalType.TIME)
     @CreationTimestamp
-    private LocalTime reservationTime;
+    private Date reservationTime;
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<Ticket> tickets;
     @OneToOne
