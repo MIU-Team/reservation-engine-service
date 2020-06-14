@@ -1,2 +1,2 @@
-spring.cloud.consul.host=http://localhost
-spring.cloud.consul.port=8500
+#spring.cloud.consul.host=http://localhost
+#spring.cloud.consul.port=8500
