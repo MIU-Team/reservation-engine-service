@@ -1,11 +1,15 @@
 package edu.miu.cs544.group4.engine.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.miu.common.exception.ResourceNotFoundException;
+import edu.miu.cs544.group4.engine.model.Airline;
 import edu.miu.cs544.group4.engine.model.Airport;
+import edu.miu.cs544.group4.engine.service.AirlineService;
 import edu.miu.cs544.group4.engine.service.AirportService;
 import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 
@@ -31,8 +37,72 @@ public class AdminController {
 	@Autowired
 	AirportService airportService;
 
-	// Airline APIs
+	
+	@Autowired
+	AirlineService airlineService;
 
+	// Airline APIs
+	@GetMapping("/airline/view/all")
+	public List<Airline> allAirlines() {
+
+		return	airlineService.getAllAirline();
+
+	}
+
+	@GetMapping("/airline/view/id/{id}")
+	public Optional<Airline> getAirline(@PathVariable Integer id) {
+		return airlineService.getAirlineById(id);
+	}
+
+
+	@GetMapping("/airline/view/name")
+	public List<Airline> getByNameAirline(@RequestParam String name){
+		return airlineService.getAirlineByName(name);
+	}
+
+	
+
+	//Saving Starts Here
+	@PostMapping(value = "/airline/save", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public String saveFlight(@RequestBody Airline airline){
+		airlineService.saveAirline(airline);
+		return "saved successfully";
+	}
+
+
+	//Deleting Starts here
+	@DeleteMapping("/airline/delete/id/{id}")
+	public String deleteAirlineById(@PathVariable Integer id) {
+		airlineService.removeAirlineById(id);
+		return "The Airline with Id " + id +" is deleted successfully";
+	}
+
+	@DeleteMapping("/airline/delete")
+	public String deleteAllAirlines() {
+		airlineService.removeAll();
+		return "All The Airline Data are Successfully Deleted";
+	}
+
+	@DeleteMapping("/airline/delete/name")
+	public String deleteAirlineByFName(@RequestParam String name) {
+		airlineService.removeAirlineByName(name);
+		return "The Airline with the name " + name +" is deleted successfully";
+	}
+
+
+	
+	//Updating Starts here
+		@PutMapping("/airline/update/id/{id}")
+		public String updateAirlineById(@PathVariable Integer id, @RequestBody Airline airline) {
+			airlineService.updateAirlineById(id, airline);
+			return "The Airline with Id " + id +" is Updated successfully";
+		}	
+	
+		@PutMapping("/airline/update/id/{id}")
+		public String updateAirlineByName(@PathVariable String name, @RequestBody Airline airline) {
+			airlineService.updateAirlineByName(name, airline);
+			return "The Airline with Id " + name +" is Updated successfully";
+		}	
 	// Airport APIs
 	@GetMapping("airport/list")
 	public List<AirportResponse> listAirports() {

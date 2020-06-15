@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AirlineServiceImpl extends BaseReadWriteServiceImpl<AirlineResponse, Airline, Integer> implements AirlineService {
@@ -24,4 +25,61 @@ public class AirlineServiceImpl extends BaseReadWriteServiceImpl<AirlineResponse
   public List<AirlineResponse> findAirlinesOutOfAnAirport(String code) {
     return convertEntityListToResponseList(airlineRepository.findAirlinesOutOfAnAirport(code));
   }
+
+@Override
+public List<Airline> getAllAirline() {
+	
+	return airlineRepository.findAll();
+}
+
+@Override
+public Optional<Airline> getAirlineById(Integer id) {
+	
+	return airlineRepository.findById(id);
+}
+
+@Override
+public List<Airline> getAirlineByName(String name) {
+	return airlineRepository.findByName(name);
+}
+
+
+@Override
+public void saveAirline(Airline airline) {
+	airlineRepository.save(airline);
+	
+}
+
+@Override
+public void removeAirlineById(Integer id) {
+	airlineRepository.deleteById(id);
+	
+}
+
+@Override
+public void removeAll() {
+	airlineRepository.deleteAll();
+	
+}
+
+@Override
+public void removeAirlineByName(String name) {
+	airlineRepository.deleteByName(name);
+	
+}
+
+@Override
+public void updateAirlineById(Integer id, Airline airline) {
+	airlineRepository.updateAirline(id, airline);
+}
+
+@Override
+public void updateAirlineByName(String name, Airline airline) {
+//	Airline u = airlineRepository.findByName(name);
+//	u.setName(airline.getName());
+//	u.setCode(airline.getCode());
+	
+}
+
+
 }
