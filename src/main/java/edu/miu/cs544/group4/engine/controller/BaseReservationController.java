@@ -8,10 +8,7 @@ import edu.miu.cs544.group4.engine.service.response.AirlineResponse;
 import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class BaseReservationController {
   }
 
   @RequestMapping("/all-airlines/{code}")
-  public List<AirlineResponse> getAirlinesOutOfAnAirport(String code) {
+  public List<AirlineResponse> getAirlinesOutOfAnAirport(@PathVariable String code) {
     return airlineService.findAirlinesOutOfAnAirport(code);
   }
 
