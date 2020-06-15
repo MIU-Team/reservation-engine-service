@@ -38,7 +38,17 @@ public class AdminController {
 	public List<AirportResponse> listAirports() {
 		return airportService.findAll();
 	}
+	
+	@GetMapping("airport/{id}")
+	public AirportResponse getById(@PathVariable int id)throws ResourceNotFoundException {
+		return airportService.findById(id);
+	}
 
+	@GetMapping("airport/view/{name}")
+	public AirportResponse getByName(@PathVariable String name)throws ResourceNotFoundException {
+		return airportService.getAirportByName(name);
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, name = "airport/create")
 	public AirportResponse CreateAirport(@RequestBody Airport airport) {
 		return airportService.create(airport);

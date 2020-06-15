@@ -7,6 +7,6 @@ import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 
 public interface AirportService extends BaseReadWriteService<AirportResponse, Airport, Integer> {
 	AirportResponse create(Airport airport);
-
 	boolean deleteAirport(int id);
+	AirportResponse getAirportByName(String name);
 }

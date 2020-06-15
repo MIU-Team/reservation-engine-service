@@ -25,4 +25,10 @@ public class AirportServiceImpl extends BaseReadWriteServiceImpl<AirportResponse
 		airportRepository.deleteById(id);
 		return true;
 	}
+
+	@Override
+	public AirportResponse getAirportByName(String name) {
+		// TODO Auto-generated method stub
+		return convertEntityToResponse(airportRepository.findByName(name));
+	}
 }
