@@ -48,4 +48,11 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
         flightRequest.getDestinationCode()
     ));
   }
+
+  	@Override
+	public boolean deleteFlight(int id) {
+		// TODO Auto-generated method stub
+  		flightRepository.deleteById(id);
+		return true;
+	}
 }

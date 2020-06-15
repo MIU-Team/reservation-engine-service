@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.cs544.group4.engine.model.Airport;
+import edu.miu.cs544.group4.engine.model.Flight;
 import edu.miu.cs544.group4.engine.service.AirportService;
+import edu.miu.cs544.group4.engine.service.FlightService;
 import edu.miu.cs544.group4.engine.service.response.AirportResponse;
+import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 
 @RestController
 @RequestMapping("/admin/")
@@ -31,6 +34,8 @@ public class AdminController {
 	@Autowired
 	AirportService airportService;
 
+	@Autowired
+	FlightService flightService;
 	// Airline APIs
 
 	// Airport APIs
@@ -63,5 +68,27 @@ public class AdminController {
 	@GetMapping("airport/delete/{id}")
 	public boolean DeleteAirport(@PathVariable int id) throws ResourceNotFoundException {
 		return airportService.deleteAirport(id);
+	}
+	
+	// Flight APIs
+	@GetMapping("flight/list")
+	public List<FlightResponse> listFlights() {
+		return flightService.findAll();
+	}
+	
+	@PostMapping("flight/create")
+	public FlightResponse CreateFlight(@RequestBody Flight flight) {
+		return flightService.create(flight);
+	}
+	
+	@PostMapping("flight/update/{id}")
+	public FlightResponse UpdateFlight(@PathVariable int id, @RequestBody FlightResponse request)
+			throws ResourceNotFoundException {
+		return flightService.update(id, request);
+	}
+
+	@GetMapping("flight/delete/{id}")
+	public boolean DeleteFlight(@PathVariable int id) throws ResourceNotFoundException {
+		return flightService.deleteFlight(id);
 	}
 }
