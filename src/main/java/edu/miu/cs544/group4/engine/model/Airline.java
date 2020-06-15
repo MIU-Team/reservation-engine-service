@@ -11,6 +11,10 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(
+    name="Airline.findAirlinesOutOfAnAirport",
+    query="SELECT distinct  al FROM Flight f JOIN f.airline al WHERE f.origin.code=:airportCode"
+)
 public class Airline implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
