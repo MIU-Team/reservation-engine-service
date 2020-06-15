@@ -6,9 +6,16 @@ import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AirportServiceImpl extends BaseReadWriteServiceImpl<AirportResponse, Airport, Integer> implements AirportService {
-  @Override
-  public AirportResponse create(Airport airport) {
-    return convertEntityToResponse(baseRepository.save(airport));
-  }
+public class AirportServiceImpl extends BaseReadWriteServiceImpl<AirportResponse, Airport, Integer>
+		implements AirportService {
+	@Override
+	public AirportResponse create(Airport airport) {
+		return convertEntityToResponse(baseRepository.save(airport));
+	}
+
+	@Override
+	public boolean deleteAirport(int id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
