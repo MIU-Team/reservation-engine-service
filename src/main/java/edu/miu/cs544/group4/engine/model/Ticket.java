@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -30,8 +32,18 @@ public class Ticket implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date flightDate;
     @ManyToOne
-    @JoinTable(name = "ticket_reservation")
+    @JoinTable(
+        name = "ticket_reservation",
+        joinColumns = @JoinColumn(name = "ticket_id"),
+        inverseJoinColumns = @JoinColumn(name = "reservation_id"))
     private Reservation reservation;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Passenger passenger;
+
+    @ManyToOne
+    @JoinTable(
+        name = "ticket_flight",
+        joinColumns = @JoinColumn(name = "ticket_id"),
+        inverseJoinColumns = @JoinColumn(name = "flight_id"))
+    private Flight flight;
 }

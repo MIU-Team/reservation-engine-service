@@ -19,7 +19,7 @@ public class Customer implements Serializable {
     private String phoneNumber;
     private String email;
     @Enumerated(value = EnumType.STRING)
-    private Role role;
+    private Role role = Role.CUSTOMER;
 
 }
 

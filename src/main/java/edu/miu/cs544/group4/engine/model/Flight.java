@@ -4,16 +4,38 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQueries(
+    {
+        @NamedQuery(
+        name = "Flight.getFlightsOnRouteAndDate",
+        query = "SELECT f from Flight f " +
+            "WHERE f.origin.code = :originCode AND f.destination.code = :destinationCode " +
+            "AND f.departureTime BETWEEN :fromDate AND :toDate"
+        ),
+        @NamedQuery(
+            name = "Flight.getFlightsOnRoute",
+            query = "SELECT f from Flight f " +
+                "WHERE f.origin.code = :originCode AND f.destination.code = :destinationCode "
+        )
+    }
+)
 public class Flight implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -22,9 +44,9 @@ public class Flight implements Serializable {
     private Integer capacity;
     @Column(length = 4)
     private String flightNumber;
-    @Temporal(TemporalType.TIME)
+    @Column(columnDefinition = "TIMESTAMP")
     private Date departureTime;
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date arrivalTime;
     @ManyToOne
     @JoinColumn(name = "airline_id")
@@ -35,5 +57,4 @@ public class Flight implements Serializable {
     @ManyToOne
     @JoinColumn(name = "destination_airport_id")
     private Airport destination;
-
 }

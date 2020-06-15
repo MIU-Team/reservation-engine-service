@@ -15,4 +15,5 @@ public class TicketResponse {
     private Date flightDate;
     private ReservationResponse reservation;
     private PassengerResponse passenger;
+    private FlightResponse flight;
 }
