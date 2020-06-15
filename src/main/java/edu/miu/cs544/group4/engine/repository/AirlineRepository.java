@@ -9,4 +9,19 @@ import java.util.List;
 @Repository
 public interface AirlineRepository extends BaseRepository<Airline, Integer> {
   List<Airline> findAirlinesOutOfAnAirport(String airportCode);
+  
+  
+//Getting Passenger Data Using different feature
+public List<Airline> findByName(String name);
+
+
+
+//Deleting Passenger Data Using Different feature
+public String deleteByName(String name);
+
+public default void updateAirline(Integer id, Airline airline) {
+	Airline u = findById(id).get();
+	u.setName(airline.getName());
+	u.setCode(airline.getCode());
+}
 }
