@@ -2,17 +2,17 @@ package edu.miu.cs544.group4.engine.service;
 
 import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.common.service.BaseReadWriteService;
-import edu.miu.cs544.group4.engine.model.Customer;
-import edu.miu.cs544.group4.engine.model.Flight;
 import edu.miu.cs544.group4.engine.model.Passenger;
 import edu.miu.cs544.group4.engine.model.Reservation;
+import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
+import edu.miu.cs544.group4.engine.service.response.ReservationResultResponse;
 
 import java.util.List;
 
 public interface ReservationService extends BaseReadWriteService<ReservationResponse, Reservation, Integer> {
-  ReservationResponse makeReservation(Customer customer, List<Flight> flights) throws ResourceNotFoundException;
+  ReservationResultResponse makeReservation(ReservationRequest request);
 
   ReservationResponse confirmReservation(String reservationCode, List<Passenger> passengers) throws ResourceNotFoundException;
 
