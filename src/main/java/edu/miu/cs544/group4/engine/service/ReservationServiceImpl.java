@@ -1,5 +1,6 @@
 package edu.miu.cs544.group4.engine.service;
 
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.common.service.BaseReadWriteServiceImpl;
 import edu.miu.cs544.group4.engine.exception.BusinessException;
@@ -12,8 +13,12 @@ import edu.miu.cs544.group4.engine.repository.CustomerRepository;
 import edu.miu.cs544.group4.engine.repository.PassengerRepository;
 import edu.miu.cs544.group4.engine.repository.ReservationRepository;
 import edu.miu.cs544.group4.engine.repository.TicketRepository;
+import edu.miu.cs544.group4.engine.service.response.AddressResponse;
+import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
+import edu.miu.cs544.group4.engine.service.response.PassengerResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
 import edu.miu.cs544.group4.engine.util.ReservationUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
@@ -39,6 +44,15 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     @Override
     public List<ReservationResponse> getAllReservationsByEmail(String email) {
         return convertEntityListToResponseList(reservationRepository.getAllReservationByCustomerEmail(email));
+    }
+
+    @Override
+    public List<PassengerReservationResponse> getAllCustomerPassengersAndTheirReservations(String email) {
+        return reservationRepository.getAllReservationByCustomerEmail(email)
+                .stream()
+                .map(this::convertPassengerToPassengerReservationResponse)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -99,5 +113,21 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
                 ticket.setTicketNumber(ReservationUtils.generateTicketNumber());
                 return ticket;
             }).collect(Collectors.toList());
+    }
+
+    private List<PassengerReservationResponse> convertPassengerToPassengerReservationResponse(Reservation reservation) {
+        return reservation.getTickets().stream()
+                .map(Ticket::getPassenger)
+                .map(passenger -> {
+                    PassengerReservationResponse p = new PassengerReservationResponse();
+                    p.setFirstName(passenger.getFirstName());
+                    p.setLastName(passenger.getLastName());
+                    AddressResponse addr = new AddressResponse();
+                    BeanUtils.copyProperties(passenger.getAddress(), addr);
+                    p.setAddress(addr);
+                    p.getReservationCodes().add(reservation.getCode());
+
+                    return p;
+                }).collect(Collectors.toList());
     }
 }

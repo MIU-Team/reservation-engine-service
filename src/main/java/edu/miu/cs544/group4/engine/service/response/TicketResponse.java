@@ -13,7 +13,6 @@ public class TicketResponse {
     private Integer id;
     private String ticketNumber;
     private Date flightDate;
-    private ReservationResponse reservation;
     private PassengerResponse passenger;
     private FlightResponse flight;
 }
