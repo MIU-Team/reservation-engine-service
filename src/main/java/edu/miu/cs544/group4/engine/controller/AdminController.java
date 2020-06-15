@@ -97,12 +97,7 @@ public class AdminController {
 		return "The Airline with Id " + id + " is Updated successfully";
 	}
 
-	//@PutMapping("/airline/update/id/{id}")
-	//public String updateAirlineByName(@PathVariable String name, @RequestBody Airline airline) {
-	//	airlineService.updateAirlineByName(name, airline);
-	//	return "The Airline with Id " + name + " is Updated successfully";
-	//}
-
+	
 	// Airport APIs
 	@GetMapping("airport/list")
 	public List<AirportResponse> listAirports() {
