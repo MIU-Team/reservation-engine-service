@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AirportRepository extends BaseRepository<Airport, Integer> {
+	void deleteById(int id);
 }
 
