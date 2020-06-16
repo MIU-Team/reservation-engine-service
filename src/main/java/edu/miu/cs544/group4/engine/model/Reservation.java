@@ -55,6 +55,10 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name = "agent_id")
+    private Customer agent;
+
     @ManyToMany
     @JoinTable(
         name = "reservation_flight",
@@ -63,6 +67,7 @@ public class Reservation implements Serializable {
         uniqueConstraints = @UniqueConstraint(columnNames = {"reservation_code", "flight_number" })
     )
     private Set<Flight> flights;
+
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status = ReservationStatus.NEW;
@@ -74,6 +79,14 @@ public class Reservation implements Serializable {
 
     public void cancel() {
         this.status = ReservationStatus.CANCELED;
+    }
+
+    public boolean canConfirm() {
+        return ReservationStatus.NEW.equals(status);
+    }
+
+    public void confirm() {
+        this.status = ReservationStatus.CONFIRMED;
     }
 
     public void addTickets(List<Ticket> tickets) {

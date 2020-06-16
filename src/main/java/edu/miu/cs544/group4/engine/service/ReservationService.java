@@ -4,6 +4,8 @@ import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.common.service.BaseReadWriteService;
 import edu.miu.cs544.group4.engine.model.Passenger;
 import edu.miu.cs544.group4.engine.model.Reservation;
+import edu.miu.cs544.group4.engine.service.request.CancelReservationRequest;
+import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
@@ -14,13 +16,19 @@ import java.util.List;
 public interface ReservationService extends BaseReadWriteService<ReservationResponse, Reservation, Integer> {
   ReservationResultResponse makeReservation(ReservationRequest request);
 
-  ReservationResponse confirmReservation(String reservationCode, List<Passenger> passengers) throws ResourceNotFoundException;
+  ReservationResponse cancelReservationByCode(CancelReservationRequest request);
+
+  ReservationResponse agentCancelReservationByCode(CancelReservationRequest request);
 
   List<ReservationResponse> getAllReservationsByEmail(String email);
+
+  List<ReservationResponse> getAgentReservationsByEmail(String email);
 
   List<PassengerReservationResponse> getAllCustomerPassengersAndTheirReservations(String email);
 
   ReservationResponse getReservationByCode(String reservationCode);
 
-  ReservationResponse cancelReservationByCode(String reservationCode) throws ResourceNotFoundException;
+  ReservationResponse confirmReservation(ConfirmReservationRequest confirmReservationRequest);
+
+  ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest);
 }

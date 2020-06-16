@@ -10,4 +10,5 @@ import java.util.List;
 public interface ReservationRepository extends BaseRepository<Reservation, Integer> {
   List<Reservation> getAllReservationByCustomerEmail(String email);
   Reservation findByCode(String code);
+  List<Reservation> getAllByAgent_Email(String email);
 }
