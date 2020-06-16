@@ -23,6 +23,7 @@ import edu.miu.cs544.group4.engine.model.Flight;
 import edu.miu.cs544.group4.engine.service.AirlineService;
 import edu.miu.cs544.group4.engine.service.AirportService;
 import edu.miu.cs544.group4.engine.service.FlightService;
+import edu.miu.cs544.group4.engine.service.request.SaveFlightRequest;
 import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 
@@ -137,12 +138,12 @@ public class AdminController {
 	}
 
 	@PostMapping("flight/create")
-	public FlightResponse CreateFlight(@RequestBody Flight flight) {
+	public FlightResponse CreateFlight(@RequestBody SaveFlightRequest flight) {
 		return flightService.create(flight);
 	}
 
 	@PostMapping("flight/update/{id}")
-	public FlightResponse UpdateFlight(@PathVariable int id, @RequestBody FlightResponse request)
+	public FlightResponse UpdateFlight(@PathVariable int id, @RequestBody SaveFlightRequest request)
 			throws ResourceNotFoundException {
 		return flightService.update(id, request);
 	}
