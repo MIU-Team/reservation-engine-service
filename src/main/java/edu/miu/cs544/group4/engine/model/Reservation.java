@@ -4,25 +4,28 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -39,7 +42,7 @@ import java.util.List;
 public class Reservation implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String code;
     @Temporal(TemporalType.TIMESTAMP)
@@ -52,12 +55,14 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(
         name = "reservation_flight",
-        joinColumns = @JoinColumn(name = "reservation_id"),
-        inverseJoinColumns = @JoinColumn(name = "flight_id"))
-    private List<Flight> flights;
+        joinColumns = @JoinColumn(name = "reservation_code", referencedColumnName = "code"),
+        inverseJoinColumns = @JoinColumn(name = "flight_number", referencedColumnName = "flightNumber"),
+        uniqueConstraints = @UniqueConstraint(columnNames = {"reservation_code", "flight_number" })
+    )
+    private Set<Flight> flights;
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status = ReservationStatus.NEW;

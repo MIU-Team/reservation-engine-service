@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,15 +107,15 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
                 return customerRepository.save(customer);
             });
         List<String> invalidFlights = new ArrayList<>();
-        List<Flight> flights = request.getFlightNumbers()
+        Set<Flight> flights = request.getFlightNumbers()
             .stream()
             .map(flightNo -> {
                 Flight flight = flightRepository.findTopByFlightNumberOrderByDepartureTimeDesc(flightNo);
-                if (flight != null) invalidFlights.add(flightNo);
+                if (flight == null) invalidFlights.add(flightNo);
                 return flight;
             })
             .filter(f -> f != null)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
         Reservation reservation = new Reservation();
         reservation.setCustomer(realCustomer);
         reservation.setFlights(flights);
