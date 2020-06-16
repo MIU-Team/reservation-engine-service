@@ -8,9 +8,13 @@ import edu.miu.cs544.group4.engine.service.response.AirlineResponse;
 import edu.miu.cs544.group4.engine.service.response.AirportResponse;
 import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author knguyen93
@@ -48,5 +52,17 @@ public class BaseReservationController {
   @PostMapping("/all-flights-on-route")
   public List<FlightResponse> getAllFlightsOnRoute(@RequestBody FlightRequest flightRequest) {
     return flightService.getFlightsOnRoute(flightRequest);
+  }
+  
+  
+  @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public Map<String, String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+      Map<String, String> errors = new HashMap<>();
+   
+      ex.getBindingResult().getFieldErrors().forEach(error -> 
+          errors.put(error.getField(), error.getDefaultMessage()));
+       
+      return errors;
   }
 }
