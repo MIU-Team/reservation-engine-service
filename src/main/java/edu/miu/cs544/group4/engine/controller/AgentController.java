@@ -10,6 +10,7 @@ import edu.miu.cs544.group4.engine.service.response.ReservationResultResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -32,12 +33,12 @@ public class AgentController extends BaseReservationController {
     }
 
     @PutMapping("/reservations")
-    public ReservationResultResponse makeReservation(@RequestBody ReservationRequest request) {
+    public ReservationResultResponse makeReservation(@Valid @RequestBody ReservationRequest request) {
         return reservationService.makeAgentReservation(request);
     }
 
     @PostMapping("/reservations/confirm")
-    public ReservationResponse confirmReservation(@RequestBody ConfirmReservationRequest request)  {
+    public ReservationResponse confirmReservation(@Valid @RequestBody ConfirmReservationRequest request)  {
         return reservationService.agentConfirmReservation(request);
     }
 

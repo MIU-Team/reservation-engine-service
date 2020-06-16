@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -38,17 +39,17 @@ public class PassengerController extends BaseReservationController {
   }
 
   @PutMapping("/reservations")
-  public ReservationResultResponse makeReservation(@RequestBody ReservationRequest request) {
+  public ReservationResultResponse makeReservation(@Valid @RequestBody ReservationRequest request) {
     return reservationService.makeReservation(request);
   }
 
   @PostMapping("/reservations/confirm")
-  public ReservationResponse confirmReservation(@RequestBody ConfirmReservationRequest request)  {
+  public ReservationResponse confirmReservation(@Valid @RequestBody ConfirmReservationRequest request)  {
     return reservationService.confirmReservation(request);
   }
 
   @PostMapping("/reservations/cancel")
-  public ReservationResponse cancelReservation(@RequestBody CancelReservationRequest request)  {
+  public ReservationResponse cancelReservation(@Valid @RequestBody CancelReservationRequest request)  {
     return reservationService.cancelReservationByCode(request);
   }
 }
