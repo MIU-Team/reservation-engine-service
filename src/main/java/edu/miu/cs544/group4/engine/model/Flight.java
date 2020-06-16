@@ -60,4 +60,11 @@ public class Flight implements Serializable {
     @ManyToOne
     @JoinColumn(name = "destination_airport_id")
     private Airport destination;
+
+    public boolean canBookFlight(Integer seatsToBook) {
+        return this.capacity >= seatsToBook;
+    }
+    public void updateCapacity(Integer seatsBooked) {
+        this.capacity -= seatsBooked;
+    }
 }
