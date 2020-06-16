@@ -1,6 +1,8 @@
 package edu.miu.cs544.group4.engine.controller;
 
 import edu.miu.cs544.group4.engine.service.ReservationService;
+import edu.miu.cs544.group4.engine.service.request.CancelReservationRequest;
+import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResultResponse;
@@ -37,5 +39,15 @@ public class PassengerController {
   @PostMapping("/reservations/make-reservation")
   public ReservationResultResponse makeReservation(@RequestBody ReservationRequest request) {
     return reservationService.makeReservation(request);
+  }
+
+  @PostMapping("/reservations/confirm")
+  public ReservationResponse confirmReservation(@RequestBody ConfirmReservationRequest request)  {
+    return reservationService.confirmReservation(request);
+  }
+
+  @PostMapping("/reservations/cancel")
+  public ReservationResponse cancelReservation(@RequestBody CancelReservationRequest request)  {
+    return reservationService.cancelReservationByCode(request);
   }
 }

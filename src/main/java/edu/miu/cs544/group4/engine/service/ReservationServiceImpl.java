@@ -14,6 +14,8 @@ import edu.miu.cs544.group4.engine.repository.PassengerRepository;
 import edu.miu.cs544.group4.engine.repository.ReservationRepository;
 import edu.miu.cs544.group4.engine.repository.TicketRepository;
 import edu.miu.cs544.group4.engine.service.mapper.FlightResponseMapper;
+import edu.miu.cs544.group4.engine.service.request.CancelReservationRequest;
+import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.AddressResponse;
 import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
@@ -61,6 +63,11 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     }
 
     @Override
+    public List<ReservationResponse> getAgentReservationsByEmail(String email) {
+        return convertEntityListToResponseList(reservationRepository.getAllByAgent_Email(email));
+    }
+
+    @Override
     public List<PassengerReservationResponse> getAllCustomerPassengersAndTheirReservations(String email) {
         return reservationRepository.getAllReservationByCustomerEmail(email)
                 .stream()
@@ -75,10 +82,33 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     }
 
     @Override
-    public ReservationResponse cancelReservationByCode(String reservationCode) throws ResourceNotFoundException {
+    public ReservationResponse cancelReservationByCode(CancelReservationRequest request) {
         Reservation reservation = Optional
-            .ofNullable(reservationRepository.findByCode(reservationCode))
-            .orElseThrow(ResourceNotFoundException::new);
+                .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
+                .orElseThrow(()-> new IllegalArgumentException("Reservation code is invalid"));
+
+        if (!request.getEmail().equals(reservation.getCustomer().getEmail())) {
+            throw new BusinessException("Cannot cancel the Reservation that was not made by you");
+        }
+
+        if (!reservation.canCancel()) {
+            throw new BusinessException("Cannot cancel the Reservation because it was already Canceled");
+        }
+
+        reservation.cancel();
+        return convertEntityToResponse(reservationRepository.save(reservation));
+    }
+
+    @Override
+    public ReservationResponse agentCancelReservationByCode(CancelReservationRequest request) {
+        Reservation reservation = Optional
+                .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
+                .orElseThrow(()-> new IllegalArgumentException("Reservation code is invalid"));
+
+        Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
+                .filter(email -> email.equals(request.getEmail()))
+                .orElseThrow(() ->new BusinessException("Cannot confirm a reservation that was not made by you"));
+
 
         if (!reservation.canCancel()) {
             throw new BusinessException("Cannot cancel the Reservation because it was already Canceled");
@@ -124,19 +154,53 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     }
 
     @Override
-    public ReservationResponse confirmReservation(String reservationCode, List<Passenger> passengers) throws ResourceNotFoundException {
+    public ReservationResponse confirmReservation(ConfirmReservationRequest confirmReservationRequest) {
         Reservation reservation = Optional
-            .ofNullable(reservationRepository.findByCode(reservationCode))
-            .orElseThrow(ResourceNotFoundException::new);
+                .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
+                .orElseThrow(()-> new IllegalArgumentException("Incorrect Reservation Code"));
 
+        if (confirmReservationRequest.getEmail() != reservation.getCustomer().getEmail()) {
+            throw new BusinessException("Cannot confirm a reservation that was not made by you");
+        }
+
+        if (CollectionUtils.isEmpty(confirmReservationRequest.getPassengers())) {
+            throw new BusinessException("Cannot confirm a reservation with no passengers");
+        }
+
+        return generateReservationResponse(reservation, confirmReservationRequest.getPassengers());
+    }
+
+    private ReservationResponse generateReservationResponse(Reservation reservation, List<Passenger> passengers) {
         List<Ticket> tickets = reservation.getFlights()
-            .stream()
-            .map(flight -> generateTickets(flight, passengers))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
+                .stream()
+                .map(flight -> generateTickets(flight, passengers))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        if (!reservation.canConfirm()) {
+            throw new BusinessException("Cannot confirm reservation because it is either confirmed or cancelled");
+        }
         reservation.addTickets(tickets);
+        reservation.confirm();
         reservationRepository.save(reservation);
         return convertEntityToResponse(reservation);
+    }
+
+    @Override
+    public ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest) {
+        Reservation reservation = Optional
+                .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
+                .orElseThrow(()-> new IllegalArgumentException("Incorrect Reservation Code"));
+
+        Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
+                .filter(email -> email.equals(confirmReservationRequest.getEmail()))
+                .orElseThrow(() ->new BusinessException("Cannot confirm a reservation that was not made by you"));
+
+
+        if (CollectionUtils.isEmpty(confirmReservationRequest.getPassengers())) {
+            throw new BusinessException("Cannot confirm a reservation with no passengers");
+        }
+
+        return generateReservationResponse(reservation, confirmReservationRequest.getPassengers());
     }
 
     /**
@@ -184,4 +248,5 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         response.setInvalidFlightNumbers(invalidFlights);
         return response;
     }
+
 }

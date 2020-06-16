@@ -1,5 +1,6 @@
 package edu.miu.cs544.group4.engine.service.request;
 
+import edu.miu.cs544.group4.engine.model.Customer;
 import lombok.Data;
 import lombok.ToString;
 

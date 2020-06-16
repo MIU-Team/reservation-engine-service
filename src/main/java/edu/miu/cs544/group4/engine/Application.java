@@ -50,7 +50,7 @@ public class Application {
 	 * Un-comment the @Bean to create the dummy data.
 	 * Also make sure un-comment "ddl-auto: create" in the application.yml
 	 */
-	//@Bean
+//	@Bean
 	public void testRepository() {
 		History history = new History();
 		history.setDescription("There is nothing such history");
@@ -122,8 +122,9 @@ public class Application {
 		customer.setEmail("khanh@gmail.com");
 		customer.setPhoneNumber("83638483463846");
 		customer.setRole(Role.CUSTOMER);
-
 		customerRepository.save(customer);
+
+
 
 		Ticket ticket = new Ticket();
 		ticket.setPassenger(passenger);
@@ -143,5 +144,34 @@ public class Application {
 		reservation.addTickets(Arrays.asList(ticket, ticket2));
 
 		reservationRepository.save(reservation);
+
+		Reservation reservation2 = new Reservation();
+		Customer customer2 = new Customer();
+		customer2.setEmail("agent@gmail.com");
+		customer2.setPhoneNumber("5678900345");
+		customer2.setRole(Role.AGENT);
+		customerRepository.save(customer2);
+
+		Customer customer3 = new Customer();
+		customer3.setEmail("customer@gmail.com");
+		customer3.setPhoneNumber("77777777");
+		customer3.setRole(Role.CUSTOMER);
+		customerRepository.save(customer3);
+
+		Passenger passenger3 = new Passenger();
+		passenger3.setFirstName("Salek");
+		passenger3.setLastName("Payman");
+
+		Ticket ticket3 = new Ticket();
+		ticket3.setPassenger(passenger3);
+		ticket3.setTicketNumber(ReservationUtils.generateTicketNumber());
+		ticket3.setFlightDate(flight.getDepartureTime());
+		ticket3.setFlight(flight);
+
+		reservation2.setCode(ReservationUtils.generateReservationCode());
+		reservation2.setAgent(customer2);
+		reservation2.setCustomer(customer3);
+		reservation2.addTickets(Arrays.asList(ticket3));
+		reservationRepository.save(reservation2);
 	}
 }
