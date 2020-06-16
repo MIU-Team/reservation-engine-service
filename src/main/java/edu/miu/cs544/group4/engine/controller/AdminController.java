@@ -1,7 +1,8 @@
 package edu.miu.cs544.group4.engine.controller;
 
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.cs544.group4.engine.model.Airline;
 import edu.miu.cs544.group4.engine.model.Airport;
-import edu.miu.cs544.group4.engine.model.Flight;
 import edu.miu.cs544.group4.engine.service.AirlineService;
 import edu.miu.cs544.group4.engine.service.AirportService;
 import edu.miu.cs544.group4.engine.service.FlightService;
@@ -29,7 +29,7 @@ import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 
 @RestController
 @RequestMapping("/admin/")
-public class AdminController {
+public class AdminController extends BaseReservationController {
 
 	// Test method will be removed later
 	@GetMapping("hello")
@@ -138,7 +138,7 @@ public class AdminController {
 	}
 
 	@PostMapping("flight/create")
-	public FlightResponse CreateFlight(@RequestBody SaveFlightRequest flight) {
+	public FlightResponse CreateFlight(@Valid @RequestBody SaveFlightRequest flight) {
 		return flightService.create(flight);
 	}
 
@@ -152,4 +152,6 @@ public class AdminController {
 	public boolean DeleteFlight(@PathVariable int id) throws ResourceNotFoundException {
 		return flightService.deleteFlight(id);
 	}
+    
+	
 }

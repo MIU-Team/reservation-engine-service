@@ -68,15 +68,6 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 	}
 
 	private Flight PrepareFlightData(SaveFlightRequest request, Flight flight) {
-		if (request.getAirlineId() <= 0) {
-			throw new IllegalArgumentException("Airline is required");
-		}
-		if (request.getOriginAirportId() <= 0) {
-			throw new IllegalArgumentException("Departure airport is required");
-		}
-		if (request.getDestinationAirportId() <= 0) {
-			throw new IllegalArgumentException("Destination airport is required");
-		}
 		flight.setCapacity(request.getCapacity());
 		flight.setFlightNumber(request.getFlightNumber());
 		flight.setDepartureTime(request.getDepartureTime());
