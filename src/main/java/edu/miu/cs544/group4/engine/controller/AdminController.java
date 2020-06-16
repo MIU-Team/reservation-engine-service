@@ -56,7 +56,7 @@ public class AdminController {
 	}
 
 	@GetMapping("/airline/view/id/{id}")
-	public Optional<Airline> getAirline(@PathVariable Integer id) {
+	public Airline getAirline(@PathVariable Integer id) {
 		return airlineService.getAirlineById(id);
 	}
 
@@ -67,9 +67,9 @@ public class AdminController {
 
 	// Saving Starts Here
 	@PostMapping(value = "/airline/save", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String saveFlight(@RequestBody Airline airline) {
+	public Airline saveAirline(@RequestBody Airline airline) {
 		airlineService.saveAirline(airline);
-		return "saved successfully";
+		return airline;
 	}
 
 	// Deleting Starts here

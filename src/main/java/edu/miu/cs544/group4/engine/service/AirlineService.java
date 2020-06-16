@@ -14,12 +14,13 @@ public interface AirlineService extends BaseReadWriteService<AirlineResponse, Ai
   
 	//The read part of the CRUD
 	public List<Airline> getAllAirline();
-	public Optional<Airline> getAirlineById(Integer id);
+	public Airline getAirlineById(Integer id);
+	public Airline getOneAirlineById(Integer id);
 	public List<Airline> getAirlineByName(String fname);
 
 	
 	//The save Part of the CRUD
-	public void saveAirline(Airline airline);
+	public Airline saveAirline(Airline airline);
 	
 	
 	//The Delete Part of the CRUD

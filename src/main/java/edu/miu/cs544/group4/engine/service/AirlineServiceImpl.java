@@ -33,9 +33,16 @@ public List<Airline> getAllAirline() {
 }
 
 @Override
-public Optional<Airline> getAirlineById(Integer id) {
+public Airline getAirlineById(Integer id) {
 	
-	return airlineRepository.findById(id);
+	return airlineRepository.findById(id).get();
+}
+
+
+@Override
+public Airline getOneAirlineById(Integer id) {
+	
+	return airlineRepository.getOne(id);
 }
 
 @Override
@@ -45,8 +52,8 @@ public List<Airline> getAirlineByName(String name) {
 
 
 @Override
-public void saveAirline(Airline airline) {
-	airlineRepository.save(airline);
+public Airline saveAirline(Airline airline) {
+	return airlineRepository.save(airline);
 	
 }
 
