@@ -20,6 +20,8 @@ import edu.miu.cs544.group4.engine.util.ReservationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
 import java.util.Arrays;
 
 @EnableDiscoveryClient

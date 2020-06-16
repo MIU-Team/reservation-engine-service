@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -18,6 +19,6 @@ public class ReservationRequest {
   private String email;
   private String phoneNumber;
   private CustomerRequest customerRequest;
-  @NotBlank(message = "Reservation should have atleast one FlightNumber")
+  @NotEmpty(message = "Reservation should have atleast one FlightNumber")
   private List<String> flightNumbers;
 }

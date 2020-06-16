@@ -43,7 +43,7 @@ public class AgentController extends BaseReservationController {
     }
 
     @PostMapping("/reservations/cancel")
-    public ReservationResponse cancelReservation(@RequestBody CancelReservationRequest request)  {
+    public ReservationResponse cancelReservation(@Valid @RequestBody CancelReservationRequest request)  {
         return reservationService.agentCancelReservationByCode(request);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -14,6 +15,6 @@ public class ConfirmReservationRequest {
     private String email;
     @NotBlank(message = "Reservation code is mandatory")
     private String reservationCode;
-    @NotBlank(message = "Reservation requires atleast one passenger")
+    @NotEmpty(message = "Reservation requires atleast one passenger")
     private List<Passenger> passengers;
 }
