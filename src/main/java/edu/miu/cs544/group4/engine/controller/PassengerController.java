@@ -22,7 +22,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/passenger")
-public class PassengerController {
+public class PassengerController extends BaseReservationController {
 
   @Autowired
   private ReservationService reservationService;

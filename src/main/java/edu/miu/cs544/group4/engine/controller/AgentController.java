@@ -17,7 +17,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/agent")
-public class AgentController {
+public class AgentController extends BaseReservationController {
     @Autowired
     private ReservationService reservationService;
 
