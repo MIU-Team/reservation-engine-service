@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +46,12 @@ public class BaseReservationController {
    * View list of flights between a departure and destination for a date
    */
   @PostMapping("/all-flights-on-date")
-  public List<FlightResponse> getAllFlightsOnADate(@RequestBody FlightRequest flightRequest) {
+  public List<FlightResponse> getAllFlightsOnADate(@Valid @RequestBody FlightRequest flightRequest) {
     return flightService.getFlightsOnRouteAndDate(flightRequest);
   }
 
   @PostMapping("/all-flights-on-route")
-  public List<FlightResponse> getAllFlightsOnRoute(@RequestBody FlightRequest flightRequest) {
+  public List<FlightResponse> getAllFlightsOnRoute(@Valid @RequestBody FlightRequest flightRequest) {
     return flightService.getFlightsOnRoute(flightRequest);
   }
   
