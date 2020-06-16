@@ -22,5 +22,9 @@ public class Customer implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private Role role = Role.CUSTOMER;
 
+    public boolean isAgent() {
+        return Role.AGENT.equals(role);
+    }
+
 }
 

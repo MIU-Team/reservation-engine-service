@@ -50,8 +50,6 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 	public List<FlightResponse> getFlightsOnRouteAndDate(FlightRequest flightRequest) {
 		Date fromDate = DateUtils.formatDate(flightRequest.getDate());
 		Date toDate = DateUtils.fromDateAfter(fromDate, 1);
-		log.info(flightRequest.toString());
-		log.info("fromDate=" + fromDate + ",toDate=  " + toDate);
 		return convertEntityListToResponseList(flightRepository.getFlightsOnRouteAndDate(flightRequest.getOriginCode(),
 				flightRequest.getDestinationCode(), fromDate, toDate));
 	}
@@ -74,10 +72,10 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 			throw new IllegalArgumentException("Airline is required");
 		}
 		if (request.getOriginAirportId() <= 0) {
-			throw new IllegalArgumentException("Departure aireport is required");
+			throw new IllegalArgumentException("Departure airport is required");
 		}
 		if (request.getDestinationAirportId() <= 0) {
-			throw new IllegalArgumentException("Destination aireport is required");
+			throw new IllegalArgumentException("Destination airport is required");
 		}
 		flight.setCapacity(request.getCapacity());
 		flight.setFlightNumber(request.getFlightNumber());

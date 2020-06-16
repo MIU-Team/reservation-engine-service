@@ -31,9 +31,9 @@ public class AgentController {
         return reservationService.getAllCustomerPassengersAndTheirReservations(email);
     }
 
-    @PostMapping("/reservations/make-reservation")
+    @PutMapping("/reservations")
     public ReservationResultResponse makeReservation(@RequestBody ReservationRequest request) {
-        return reservationService.makeReservation(request);
+        return reservationService.makeAgentReservation(request);
     }
 
     @PostMapping("/reservations/confirm")

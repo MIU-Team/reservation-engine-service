@@ -1,6 +1,5 @@
 package edu.miu.cs544.group4.engine.service;
 
-import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.common.service.BaseReadWriteServiceImpl;
 import edu.miu.cs544.group4.engine.exception.BusinessException;
 import edu.miu.cs544.group4.engine.model.Customer;
@@ -29,9 +28,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -70,10 +68,10 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     @Override
     public List<PassengerReservationResponse> getAllCustomerPassengersAndTheirReservations(String email) {
         return reservationRepository.getAllReservationByCustomerEmail(email)
-                .stream()
-                .map(this::convertPassengerToPassengerReservationResponse)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+            .stream()
+            .map(this::convertPassengerToPassengerReservationResponse)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -84,8 +82,8 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     @Override
     public ReservationResponse cancelReservationByCode(CancelReservationRequest request) {
         Reservation reservation = Optional
-                .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
-                .orElseThrow(()-> new IllegalArgumentException("Reservation code is invalid"));
+            .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
+            .orElseThrow(() -> new IllegalArgumentException("Reservation code is invalid"));
 
         if (!request.getEmail().equals(reservation.getCustomer().getEmail())) {
             throw new BusinessException("Cannot cancel the Reservation that was not made by you");
@@ -102,12 +100,12 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     @Override
     public ReservationResponse agentCancelReservationByCode(CancelReservationRequest request) {
         Reservation reservation = Optional
-                .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
-                .orElseThrow(()-> new IllegalArgumentException("Reservation code is invalid"));
+            .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
+            .orElseThrow(() -> new IllegalArgumentException("Reservation code is invalid"));
 
         Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
-                .filter(email -> email.equals(request.getEmail()))
-                .orElseThrow(() ->new BusinessException("Cannot confirm a reservation that was not made by you"));
+            .filter(email -> email.equals(request.getEmail()))
+            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
 
 
         if (!reservation.canCancel()) {
@@ -120,32 +118,15 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
 
     @Override
     public ReservationResultResponse makeReservation(ReservationRequest request) {
-        if (CollectionUtils.isEmpty(request.getFlightNumbers()))
-            throw new IllegalArgumentException("Flight number(s) are required");
+        List<String> invalidFlights = new ArrayList<>();
+        Set<Flight> flights = new HashSet<>();
 
-        if (StringUtils.isEmpty(request.getEmail()) && StringUtils.isEmpty(request.getPhoneNumber()))
-            throw new IllegalArgumentException("Email/Phone Number is required");
+        prepareReservationData(request, flights, invalidFlights);
 
         // Retrieves existing Customer, otherwise create new Customer based on given information
-      Customer realCustomer = Optional
+        Customer realCustomer = Optional
             .ofNullable(customerRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
-            .orElseGet(() -> {
-                Customer customer = new Customer();
-                customer.setName(request.getName());
-                customer.setPhoneNumber(request.getPhoneNumber());
-                customer.setEmail(request.getEmail());
-                return customerRepository.save(customer);
-            });
-        List<String> invalidFlights = new ArrayList<>();
-        Set<Flight> flights = request.getFlightNumbers()
-            .stream()
-            .map(flightNo -> {
-                Flight flight = flightRepository.findTopByFlightNumberOrderByDepartureTimeDesc(flightNo);
-                if (flight == null) invalidFlights.add(flightNo);
-                return flight;
-            })
-            .filter(f -> f != null)
-            .collect(Collectors.toSet());
+            .orElseGet(() -> getOrCreateCustomer(request));
         Reservation reservation = new Reservation();
         reservation.setCustomer(realCustomer);
         reservation.setFlights(flights);
@@ -154,10 +135,41 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     }
 
     @Override
+    public ReservationResultResponse makeAgentReservation(ReservationRequest request) {
+        List<String> invalidFlights = new ArrayList<>();
+        Set<Flight> flights = new HashSet<>();
+
+        Optional.ofNullable(request.getCustomerRequest())
+            .filter(c -> !StringUtils.isEmpty(c.getName()))
+            .filter(c -> !StringUtils.isEmpty(c.getEmail()) || !StringUtils.isEmpty(c.getPhoneNumber()))
+            .orElseThrow(() -> new IllegalArgumentException("Customer information is required"));
+
+        prepareReservationData(request, flights, invalidFlights);
+
+        Customer realAgent = Optional
+            .ofNullable(customerRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
+            .filter(Customer::isAgent)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid Agent email/phone number"));
+
+        // Retrieves existing Customer, otherwise create new Customer based on given information
+        Customer realCustomer = Optional
+            .ofNullable(customerRepository.findByEmailOrPhoneNumber(
+                request.getCustomerRequest().getEmail(),
+                request.getCustomerRequest().getPhoneNumber()))
+            .orElseGet(() -> getOrCreateCustomer(request));
+        Reservation reservation = new Reservation();
+        reservation.setCustomer(realCustomer);
+        reservation.setAgent(realAgent);
+        reservation.setFlights(flights);
+        reservation.setCode(ReservationUtils.generateReservationCode());
+        return convertToReservationResultResponse(reservationRepository.save(reservation), invalidFlights);
+    }
+
+    @Override
     public ReservationResponse confirmReservation(ConfirmReservationRequest confirmReservationRequest) {
         Reservation reservation = Optional
-                .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
-                .orElseThrow(()-> new IllegalArgumentException("Incorrect Reservation Code"));
+            .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
+            .orElseThrow(() -> new IllegalArgumentException("Incorrect Reservation Code"));
 
         if (confirmReservationRequest.getEmail() != reservation.getCustomer().getEmail()) {
             throw new BusinessException("Cannot confirm a reservation that was not made by you");
@@ -172,10 +184,10 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
 
     private ReservationResponse generateReservationResponse(Reservation reservation, List<Passenger> passengers) {
         List<Ticket> tickets = reservation.getFlights()
-                .stream()
-                .map(flight -> generateTickets(flight, passengers))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+            .stream()
+            .map(flight -> generateTickets(flight, passengers))
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
         if (!reservation.canConfirm()) {
             throw new BusinessException("Cannot confirm reservation because it is either confirmed or cancelled");
         }
@@ -188,12 +200,12 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     @Override
     public ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest) {
         Reservation reservation = Optional
-                .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
-                .orElseThrow(()-> new IllegalArgumentException("Incorrect Reservation Code"));
+            .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
+            .orElseThrow(() -> new IllegalArgumentException("Incorrect Reservation Code"));
 
         Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
-                .filter(email -> email.equals(confirmReservationRequest.getEmail()))
-                .orElseThrow(() ->new BusinessException("Cannot confirm a reservation that was not made by you"));
+            .filter(email -> email.equals(confirmReservationRequest.getEmail()))
+            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
 
 
         if (CollectionUtils.isEmpty(confirmReservationRequest.getPassengers())) {
@@ -220,19 +232,19 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     }
 
     private List<PassengerReservationResponse> convertPassengerToPassengerReservationResponse(Reservation reservation) {
-      return reservation.getTickets().stream()
-          .map(Ticket::getPassenger)
-          .map(passenger -> {
-            PassengerReservationResponse p = new PassengerReservationResponse();
-            p.setFirstName(passenger.getFirstName());
-            p.setLastName(passenger.getLastName());
-            AddressResponse addr = new AddressResponse();
-            BeanUtils.copyProperties(passenger.getAddress(), addr);
-            p.setAddress(addr);
-            p.getReservationCodes().add(reservation.getCode());
+        return reservation.getTickets().stream()
+            .map(Ticket::getPassenger)
+            .map(passenger -> {
+                PassengerReservationResponse p = new PassengerReservationResponse();
+                p.setFirstName(passenger.getFirstName());
+                p.setLastName(passenger.getLastName());
+                AddressResponse addr = new AddressResponse();
+                BeanUtils.copyProperties(passenger.getAddress(), addr);
+                p.setAddress(addr);
+                p.getReservationCodes().add(reservation.getCode());
 
-            return p;
-          }).collect(Collectors.toList());
+                return p;
+            }).collect(Collectors.toList());
     }
 
     private ReservationResultResponse convertToReservationResultResponse(Reservation reservation, List<String> invalidFlights) {
@@ -249,4 +261,34 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         return response;
     }
 
+    private void prepareReservationData(ReservationRequest request, Set<Flight> flights, List<String> invalidFlights) {
+        if (CollectionUtils.isEmpty(request.getFlightNumbers()))
+            throw new IllegalArgumentException("Flight number(s) are required");
+
+        if (StringUtils.isEmpty(request.getEmail()) && StringUtils.isEmpty(request.getPhoneNumber()))
+            throw new IllegalArgumentException("Email/Phone Number is required");
+
+        flights.addAll(
+            request.getFlightNumbers()
+                .stream()
+                .map(flightNo -> {
+                    Flight flight = flightRepository.findTopByFlightNumberOrderByDepartureTimeDesc(flightNo);
+                    if (flight == null) invalidFlights.add(flightNo);
+                    return flight;
+                })
+                .filter(f -> f != null)
+                .collect(Collectors.toSet())
+        );
+
+        if (flights.isEmpty())
+            throw new IllegalArgumentException("Invalid Flight number");
+    }
+
+    private Customer getOrCreateCustomer(ReservationRequest request) {
+        Customer customer = new Customer();
+        customer.setName(request.getName());
+        customer.setPhoneNumber(request.getPhoneNumber());
+        customer.setEmail(request.getEmail());
+        return customerRepository.save(customer);
+    }
 }

@@ -16,6 +16,8 @@ import java.util.List;
 public interface ReservationService extends BaseReadWriteService<ReservationResponse, Reservation, Integer> {
   ReservationResultResponse makeReservation(ReservationRequest request);
 
+  ReservationResultResponse makeAgentReservation(ReservationRequest request);
+
   ReservationResponse cancelReservationByCode(CancelReservationRequest request);
 
   ReservationResponse agentCancelReservationByCode(CancelReservationRequest request);
