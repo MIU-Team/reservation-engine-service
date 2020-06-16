@@ -20,13 +20,9 @@ import edu.miu.cs544.group4.engine.util.ReservationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.time.LocalDateTime;
 import java.util.Arrays;
-//import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 @SpringBootApplication(
 		scanBasePackages = "edu.miu.common, edu.miu.common.config, edu.miu.cs.cs544, edu.miu.cs544.group4.engine")
 public class Application {
