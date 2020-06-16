@@ -29,6 +29,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -91,25 +92,24 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         if (CollectionUtils.isEmpty(request.getFlightNumbers()))
             throw new IllegalArgumentException("Flight number(s) are required");
 
-        if (StringUtils.isEmpty(request.getEmail()) || StringUtils.isEmpty(request.getPhoneNumber()))
+        if (StringUtils.isEmpty(request.getEmail()) && StringUtils.isEmpty(request.getPhoneNumber()))
             throw new IllegalArgumentException("Email/Phone Number is required");
 
         // Retrieves existing Customer, otherwise create new Customer based on given information
-        Customer realCustomer = Optional
+      Customer realCustomer = Optional
             .ofNullable(customerRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
             .orElseGet(() -> {
                 Customer customer = new Customer();
                 customer.setName(request.getName());
                 customer.setPhoneNumber(request.getPhoneNumber());
                 customer.setEmail(request.getEmail());
-                return Arrays.asList(customerRepository.save(customer));
-            })
-            .get(0);
+                return customerRepository.save(customer);
+            });
         List<String> invalidFlights = new ArrayList<>();
         List<Flight> flights = request.getFlightNumbers()
             .stream()
             .map(flightNo -> {
-                Flight flight = flightRepository.findByFlightNumber(flightNo);
+                Flight flight = flightRepository.findTopByFlightNumberOrderByDepartureTimeDesc(flightNo);
                 if (flight != null) invalidFlights.add(flightNo);
                 return flight;
             })
@@ -119,8 +119,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         reservation.setCustomer(realCustomer);
         reservation.setFlights(flights);
         reservation.setCode(ReservationUtils.generateReservationCode());
-        reservationRepository.save(reservation);
-        return convertToReservationResultResponse(reservation, invalidFlights);
+        return convertToReservationResultResponse(reservationRepository.save(reservation), invalidFlights);
     }
 
     @Override

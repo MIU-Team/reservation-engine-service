@@ -42,7 +42,7 @@ public class Reservation implements Serializable {
     @GeneratedValue
     private Integer id;
     private String code;
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private Date reservationTime;
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)

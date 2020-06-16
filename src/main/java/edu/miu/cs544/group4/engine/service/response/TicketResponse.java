@@ -10,7 +10,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketResponse {
-    private Integer id;
     private String ticketNumber;
     private Date flightDate;
     private PassengerResponse passenger;

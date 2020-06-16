@@ -15,7 +15,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class HistoryResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
     private String description;
 
 }

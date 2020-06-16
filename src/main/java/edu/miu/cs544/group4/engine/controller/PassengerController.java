@@ -29,7 +29,7 @@ public class PassengerController {
     return reservationService.getAllReservationsByEmail(email);
   }
 
-  @GetMapping("/reservation/{code}")
+  @GetMapping("/reservation/{reservationCode}")
   public ReservationResponse getReservation(@PathVariable String reservationCode) {
     return reservationService.getReservationByCode(reservationCode);
   }

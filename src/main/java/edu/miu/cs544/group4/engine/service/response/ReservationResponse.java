@@ -13,7 +13,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ReservationResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
     private String code;
     private Date reservationTime;
     private List<TicketResponse> tickets;

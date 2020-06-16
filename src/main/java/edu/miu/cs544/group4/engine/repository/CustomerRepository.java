@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CustomerRepository extends BaseRepository<Customer, Integer> {
-  List<Customer> findByEmailOrPhoneNumber(String email, String phoneNumber);
+  Customer findByEmailOrPhoneNumber(String email, String phoneNumber);
 }

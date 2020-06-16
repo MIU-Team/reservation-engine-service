@@ -12,7 +12,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class FlightResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
     private Integer capacity;
     private String flightNumber;
     private Date departureTime;

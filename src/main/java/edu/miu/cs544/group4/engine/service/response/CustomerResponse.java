@@ -12,7 +12,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class CustomerResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
     private String phoneNumber;
     private String email;
     private String role;
