@@ -128,7 +128,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
 
         // Retrieves existing Customer, otherwise create new Customer based on given information
         Customer realCustomer = Optional
-            .ofNullable(customerRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
+            .ofNullable(customerRepository.findTopByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
             .orElseGet(() -> getOrCreateCustomer(request));
         Reservation reservation = new Reservation();
         reservation.setCustomer(realCustomer);
@@ -150,13 +150,13 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         prepareReservationData(request, flights, invalidFlights);
 
         Customer realAgent = Optional
-            .ofNullable(customerRepository.findByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
+            .ofNullable(customerRepository.findTopByEmailOrPhoneNumber(request.getEmail(), request.getPhoneNumber()))
             .filter(Customer::isAgent)
             .orElseThrow(() -> new IllegalArgumentException("Invalid Agent email/phone number"));
 
         // Retrieves existing Customer, otherwise create new Customer based on given information
         Customer realCustomer = Optional
-            .ofNullable(customerRepository.findByEmailOrPhoneNumber(
+            .ofNullable(customerRepository.findTopByEmailOrPhoneNumber(
                 request.getCustomerRequest().getEmail(),
                 request.getCustomerRequest().getPhoneNumber()))
             .orElseGet(() -> getOrCreateCustomer(request));
