@@ -1,4 +1,4 @@
-package edu.miu.cs544.group4.engine.Configuration;
+package edu.miu.cs544.group4.engine.configuration;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -24,21 +24,6 @@ import java.util.Arrays;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
-//
-//	@Bean
-//	public Docket api() {
-//
-//		// @formatter:off
-//		// Register the controllers to swagger
-//		// Also it is configuring the Swagger Docket
-//		return new Docket(DocumentationType.SWAGGER_2)
-//				.apiInfo(apiInfo())
-//				.select()
-//				.apis(RequestHandlerSelectors.any())
-//				.paths(PathSelectors.any())
-//				.build();
-//	}
-
 
 	@Bean
 	public Docket api() throws IOException, XmlPullParserException {
@@ -46,7 +31,7 @@ public class SwaggerConfig {
 		Model model = reader.read(new FileReader("pom.xml"));
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage(""))
+				.apis(RequestHandlerSelectors.basePackage("edu.miu.cs544.group4.engine"))
 				.paths(PathSelectors.any())
 				.build()
 				.securitySchemes(new ArrayList<>(Arrays.asList(new ApiKey("Bearer", "Authorization", "Header"))))
@@ -65,11 +50,4 @@ public class SwaggerConfig {
 				.version("1.0.0")
 				.build();
 	}
-
-//	@Override
-//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//		// enabling swagger-ui part for visual documentation
-//		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-//		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-//	}
 }
