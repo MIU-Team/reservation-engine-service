@@ -25,7 +25,7 @@ public interface ReservationService extends BaseReadWriteService<ReservationResp
 
   List<ReservationResponse> getAgentReservationsByEmail(String email);
 
-  List<PassengerReservationResponse> getAllCustomerPassengersAndTheirReservations(String email);
+  List<PassengerReservationResponse> getAllAgentPassengersAndTheirReservations(String email);
 
   ReservationResponse getReservationByCode(String reservationCode);
 

@@ -45,6 +45,7 @@ public class Flight implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer capacity;
+    private Integer availableSeats;
     @Column(length = 4)
     private String flightNumber;
     @Column(columnDefinition = "TIMESTAMP")
@@ -62,9 +63,9 @@ public class Flight implements Serializable {
     private Airport destination;
 
     public boolean canBookFlight(Integer seatsToBook) {
-        return this.capacity >= seatsToBook;
+        return this.availableSeats >= seatsToBook;
     }
-    public void updateCapacity(Integer seatsBooked) {
-        this.capacity -= seatsBooked;
+    public void updateAvailableSeats(Integer seatsBooked) {
+        this.availableSeats -= seatsBooked;
     }
 }

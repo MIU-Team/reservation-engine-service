@@ -69,6 +69,7 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 
 	private Flight PrepareFlightData(SaveFlightRequest request, Flight flight) {
 		flight.setCapacity(request.getCapacity());
+		flight.setAvailableSeats(request.getAvailableSeats());
 		flight.setFlightNumber(request.getFlightNumber());
 		flight.setDepartureTime(request.getDepartureTime());
 		flight.setArrivalTime(request.getArrivalTime());
