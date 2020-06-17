@@ -1,13 +1,12 @@
 package edu.miu.cs544.group4.engine.service;
 
-import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.common.service.BaseReadWriteService;
-import edu.miu.cs544.group4.engine.model.Passenger;
 import edu.miu.cs544.group4.engine.model.Reservation;
 import edu.miu.cs544.group4.engine.service.request.CancelReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
+import edu.miu.cs544.group4.engine.service.response.PriorDepartureReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResultResponse;
 
@@ -33,4 +32,6 @@ public interface ReservationService extends BaseReadWriteService<ReservationResp
   ReservationResponse confirmReservation(ConfirmReservationRequest confirmReservationRequest);
 
   ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest);
+
+  List<PriorDepartureReservationResponse> get24HoursPriorDepartureReservations();
 }

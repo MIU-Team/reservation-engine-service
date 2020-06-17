@@ -18,8 +18,10 @@ import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.AddressResponse;
 import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
+import edu.miu.cs544.group4.engine.service.response.PriorDepartureReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResultResponse;
+import edu.miu.cs544.group4.engine.util.DateUtils;
 import edu.miu.cs544.group4.engine.util.ReservationUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -213,6 +216,15 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         }
 
         return generateReservationResponse(reservation, confirmReservationRequest.getPassengers());
+    }
+
+    @Override
+    public List<PriorDepartureReservationResponse> get24HoursPriorDepartureReservations() {
+        return reservationRepository
+            .getAllReservationsMatchTheDepartureTime(DateUtils.generateFutureDate(1))
+            .stream()
+            .map(reservation -> new PriorDepartureReservationResponse(reservation.getCode(), reservation.getCustomer().getEmail()))
+            .collect(Collectors.toList());
     }
 
     /**
