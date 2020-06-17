@@ -1,0 +1,31 @@
+server:
+  port: 8085
+spring:
+  application:
+    name: reservation-engine-service
+  datasource:
+    url: jdbc:mysql://localhost/reservation_system?serverTimezone=UTC
+    username: root
+    password: password
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+      
+#  cloud:
+#      consul:
+#        discovery:
+#          healthCheckPath: /my-health-check
+#          healthCheckInterval: 20s

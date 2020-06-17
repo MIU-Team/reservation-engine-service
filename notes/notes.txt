@@ -1,0 +1,12 @@
+Steps to run Application
+
+#1 Create database name reservation_system
+
+#2 Install the Consul Agent
+https://learn.hashicorp.com/consul/getting-started/install.html
+
+## For MACOS:
+brew install consul
+
+## To start server
+consul agent -dev
