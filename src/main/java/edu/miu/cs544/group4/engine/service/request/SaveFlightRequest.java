@@ -3,6 +3,7 @@ package edu.miu.cs544.group4.engine.service.request;
 import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 import lombok.Data;
 import lombok.ToString;
@@ -15,6 +16,7 @@ public class SaveFlightRequest {
 	@Positive(message = "Flight capacity should be more than zero")
 	private Integer capacity;
 	@NotBlank(message = "Flight number is mandatory")
+	@Size(max = 4, message = "Flight number should be 4 charachters")
 	private String flightNumber;
 	private Date departureTime;
 	private Date arrivalTime;

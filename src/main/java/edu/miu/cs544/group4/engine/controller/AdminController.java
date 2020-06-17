@@ -31,12 +31,6 @@ import edu.miu.cs544.group4.engine.service.response.FlightResponse;
 @RequestMapping("/admin/")
 public class AdminController extends BaseReservationController {
 
-	// Test method will be removed later
-	@GetMapping("hello")
-	public String sayHello() {
-		return "Hello World";
-	}
-
 	// Properties
 	@Autowired
 	AirportService airportService;
@@ -50,9 +44,7 @@ public class AdminController extends BaseReservationController {
 	// Airline APIs
 	@GetMapping("/airline/view/all")
 	public List<Airline> allAirlines() {
-
 		return airlineService.getAllAirline();
-
 	}
 
 	@GetMapping("/airline/view/id/{id}")
@@ -67,7 +59,7 @@ public class AdminController extends BaseReservationController {
 
 	// Saving Starts Here
 	@PostMapping(value = "/airline/save", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Airline saveAirline(@RequestBody Airline airline) {
+	public Airline saveAirline(@Valid @RequestBody Airline airline) {
 		airlineService.saveAirline(airline);
 		return airline;
 	}
@@ -93,7 +85,7 @@ public class AdminController extends BaseReservationController {
 
 	// Updating Starts here
 	@PutMapping("/airline/update/id/{id}")
-	public String updateAirlineById(@PathVariable Integer id, @RequestBody Airline airline) {
+	public String updateAirlineById(@PathVariable Integer id,@Valid @RequestBody Airline airline) {
 		airlineService.updateAirlineById(id, airline);
 		return "The Airline with Id " + id + " is Updated successfully";
 	}
@@ -116,12 +108,12 @@ public class AdminController extends BaseReservationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, name = "airport/create")
-	public AirportResponse CreateAirport(@RequestBody Airport airport) {
+	public AirportResponse CreateAirport(@Valid @RequestBody Airport airport) {
 		return airportService.create(airport);
 	}
 
 	@PostMapping("airport/update/{id}")
-	public AirportResponse UpdateAirport(@PathVariable int id, @RequestBody AirportResponse request)
+	public AirportResponse UpdateAirport(@PathVariable int id,@Valid @RequestBody AirportResponse request)
 			throws ResourceNotFoundException {
 		return airportService.update(id, request);
 	}
@@ -143,7 +135,7 @@ public class AdminController extends BaseReservationController {
 	}
 
 	@PostMapping("flight/update/{id}")
-	public FlightResponse UpdateFlight(@PathVariable int id, @RequestBody SaveFlightRequest request)
+	public FlightResponse UpdateFlight(@Valid @PathVariable int id, @RequestBody SaveFlightRequest request)
 			throws ResourceNotFoundException {
 		return flightService.update(id, request);
 	}
