@@ -12,5 +12,5 @@ public interface ReservationRepository extends BaseRepository<Reservation, Integ
   List<Reservation> getAllReservationByCustomerEmail(String email);
   Reservation findByCode(String code);
   List<Reservation> getAllByAgent_Email(String email);
-  List<Reservation> getAllReservationsMatchTheDepartureTime(Date departureTime);
+  List<Reservation> getAllReservationsMatchTheDepartureTime(Date fromDate, Date toDate);
 }

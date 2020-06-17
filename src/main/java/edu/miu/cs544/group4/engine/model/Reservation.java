@@ -41,7 +41,7 @@ import java.util.Set;
         @NamedQuery(
             name = "Reservation.getAllReservationsMatchTheDepartureTime",
             query = "SELECT DISTINCT r FROM Reservation r JOIN r.flights f " +
-                "WHERE r.status = 'CONFIRMED' AND f.departureTime <= :departureTime"
+                "WHERE r.status = 'CONFIRMED' AND f.departureTime BETWEEN :fromDate AND :toDate"
         )
     }
 )

@@ -206,7 +206,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     @Override
     public List<PriorDepartureReservationResponse> get24HoursPriorDepartureReservations() {
         return reservationRepository
-            .getAllReservationsMatchTheDepartureTime(DateUtils.generateFutureDate(1))
+            .getAllReservationsMatchTheDepartureTime(DateUtils.now(), DateUtils.generateFutureDate(1))
             .stream()
             .map(reservation -> new PriorDepartureReservationResponse(reservation.getCode(), reservation.getCustomer().getEmail()))
             .collect(Collectors.toList());
