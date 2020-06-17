@@ -15,6 +15,6 @@ public class ConfirmReservationRequest {
     private String email;
     @NotBlank(message = "Reservation code is mandatory")
     private String reservationCode;
-    @NotEmpty(message = "Reservation requires atleast one passenger")
+    @NotEmpty(message = "Reservation requires at least one passenger")
     private List<Passenger> passengers;
 }

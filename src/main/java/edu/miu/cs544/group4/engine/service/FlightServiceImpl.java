@@ -35,14 +35,15 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 	@Override
 	public FlightResponse create(SaveFlightRequest request) {
 		Flight newFlight = new Flight();
-		newFlight = PrepareFlightData(request, newFlight);
+		newFlight = prepareFlightData(request, newFlight);
 		return convertEntityToResponse(baseRepository.save(newFlight));
 	}
 
 	@Override
 	public FlightResponse update(int id, SaveFlightRequest request) {
-		Flight flight = flightRepository.findById(id).get();
-		flight = PrepareFlightData(request, flight);
+		Flight flight = flightRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("Invalid Flight information. " + request.toString()));
+		flight = prepareFlightData(request, flight);
 		return convertEntityToResponse(baseRepository.save(flight));
 	}
 
@@ -50,15 +51,20 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 	public List<FlightResponse> getFlightsOnRouteAndDate(FlightRequest flightRequest) {
 		Date fromDate = DateUtils.formatDate(flightRequest.getDate());
 		Date toDate = DateUtils.fromDateAfter(fromDate, 1);
-		return convertEntityListToResponseList(flightRepository.getFlightsOnRouteAndDate(flightRequest.getOriginCode(),
-				flightRequest.getDestinationCode(), fromDate, toDate));
+		return convertEntityListToResponseList(
+			flightRepository.getFlightsOnRouteAndDate(
+				flightRequest.getOriginCode(),
+				flightRequest.getDestinationCode(), fromDate, toDate)
+		);
 	}
 
 	@Override
 	public List<FlightResponse> getFlightsOnRoute(FlightRequest flightRequest) {
-		log.info(flightRequest.toString());
 		return convertEntityListToResponseList(
-				flightRepository.getFlightsOnRoute(flightRequest.getOriginCode(), flightRequest.getDestinationCode()));
+				flightRepository.getFlightsOnRoute(
+					flightRequest.getOriginCode(),
+					flightRequest.getDestinationCode())
+		);
 	}
 
 	@Override
@@ -67,15 +73,18 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 		return true;
 	}
 
-	private Flight PrepareFlightData(SaveFlightRequest request, Flight flight) {
+	private Flight prepareFlightData(SaveFlightRequest request, Flight flight) {
 		flight.setCapacity(request.getCapacity());
 		flight.setAvailableSeats(request.getAvailableSeats());
 		flight.setFlightNumber(request.getFlightNumber());
 		flight.setDepartureTime(request.getDepartureTime());
 		flight.setArrivalTime(request.getArrivalTime());
-		flight.setAirline(airlineRepository.findById(request.getAirlineId()).get());
-		flight.setOrigin(airportRepository.findById(request.getOriginAirportId()).get());
-		flight.setDestination(airportRepository.findById(request.getDestinationAirportId()).get());
+		flight.setAirline(airlineRepository.findById(request.getAirlineId())
+			.orElseThrow(() -> new IllegalArgumentException("Invalid Airline")));
+		flight.setOrigin(airportRepository.findById(request.getOriginAirportId())
+			.orElseThrow(() -> new IllegalArgumentException("Invalid Origin Airport")));
+		flight.setDestination(airportRepository.findById(request.getDestinationAirportId())
+			.orElseThrow(() -> new IllegalArgumentException("Invalid Destination Airport")));
 		return flight;
 	}
 }

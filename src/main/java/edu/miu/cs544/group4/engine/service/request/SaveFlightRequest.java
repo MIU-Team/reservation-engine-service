@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class SaveFlightRequest {
 	private Integer id;
-	
+
 	@Positive(message = "Flight capacity should be more than zero")
 	private Integer capacity;
 	@NotBlank(message = "Number of available seats is mandatory")

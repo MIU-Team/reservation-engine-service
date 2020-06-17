@@ -28,12 +28,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -88,9 +87,10 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
             .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
             .orElseThrow(() -> new IllegalArgumentException("Reservation code is invalid"));
 
-        if (!request.getEmail().equals(reservation.getCustomer().getEmail())) {
-            throw new BusinessException("Cannot cancel the Reservation that was not made by you");
-        }
+        Optional.ofNullable(reservation.getCustomer())
+            .map(Customer::getEmail)
+            .filter(email -> email.equals(request.getEmail()))
+            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
 
         if (!reservation.canCancel()) {
             throw new BusinessException("Cannot cancel the Reservation because it was already Canceled");
@@ -106,10 +106,10 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
             .ofNullable(reservationRepository.findByCode(request.getReservationCode()))
             .orElseThrow(() -> new IllegalArgumentException("Reservation code is invalid"));
 
-        Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
+        Optional.ofNullable(reservation.getAgent())
+            .map(Customer::getEmail)
             .filter(email -> email.equals(request.getEmail()))
             .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
-
 
         if (!reservation.canCancel()) {
             throw new BusinessException("Cannot cancel the Reservation because it was already Canceled");
@@ -174,9 +174,10 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
             .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
             .orElseThrow(() -> new IllegalArgumentException("Incorrect Reservation Code"));
 
-        if (confirmReservationRequest.getEmail() != reservation.getCustomer().getEmail()) {
-            throw new BusinessException("Cannot confirm a reservation that was not made by you");
-        }
+        Optional.ofNullable(reservation.getCustomer())
+            .map(Customer::getEmail)
+            .filter(email -> email.equals(confirmReservationRequest.getEmail()))
+            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
 
         if (CollectionUtils.isEmpty(confirmReservationRequest.getPassengers())) {
             throw new BusinessException("Cannot confirm a reservation with no passengers");
@@ -217,14 +218,15 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
      */
 
     private ReservationResponse generateReservationResponse(Reservation reservation, List<Passenger> passengers) {
-        List<Ticket> tickets = reservation.getFlights()
-                .stream()
-                .map(flight -> generateTickets(flight, passengers))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
         if (!reservation.canConfirm()) {
             throw new BusinessException("Cannot confirm reservation because it is either confirmed or cancelled");
         }
+        List<Ticket> tickets = reservation
+            .getFlights()
+            .stream()
+            .map(flight -> generateTickets(flight, passengers))
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
         reservation.addTickets(tickets);
         reservation.confirm();
         reservationRepository.save(reservation);
@@ -299,7 +301,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
                     if (flight == null) invalidFlights.add(flightNo);
                     return flight;
                 })
-                .filter(f -> f != null)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet())
         );
 
