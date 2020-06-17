@@ -59,7 +59,7 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "agent_id")
     private Customer agent;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "reservation_flight",
         joinColumns = @JoinColumn(name = "reservation_code", referencedColumnName = "code"),

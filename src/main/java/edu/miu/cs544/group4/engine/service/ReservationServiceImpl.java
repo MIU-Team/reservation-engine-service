@@ -66,8 +66,8 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
     }
 
     @Override
-    public List<PassengerReservationResponse> getAllCustomerPassengersAndTheirReservations(String email) {
-        return reservationRepository.getAllReservationByCustomerEmail(email)
+    public List<PassengerReservationResponse> getAllAgentPassengersAndTheirReservations(String email) {
+        return reservationRepository.getAllByAgent_Email(email)
             .stream()
             .map(this::convertPassengerToPassengerReservationResponse)
             .flatMap(Collection::stream)
@@ -197,6 +197,27 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         return convertEntityToResponse(reservation);
     }
 
+    private List<Ticket> generateTickets(Flight flight, List<Passenger> passengers) {
+        // check if the number of available seats >= number of passengers who want to buy tickets
+        if (!flight.canBookFlight(passengers.size())) {
+            throw new BusinessException("We only have " + flight.getAvailableSeats() + " seats available");
+        }
+
+        List<Ticket> tickets = passengers
+                .stream()
+                .map(p -> {
+                    Ticket ticket = new Ticket();
+                    ticket.setFlightDate(flight.getDepartureTime());
+                    ticket.setPassenger(p);
+                    ticket.setTicketNumber(ReservationUtils.generateTicketNumber());
+                    return ticket;
+                }).collect(Collectors.toList());
+
+        // reduce the seats on this flight by number of passengers who have bought tickets
+        flight.updateAvailableSeats(passengers.size());
+        return tickets;
+    }
+
     @Override
     public ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest) {
         Reservation reservation = Optional
@@ -219,17 +240,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
      * All support methods should go here
      */
 
-    private List<Ticket> generateTickets(Flight flight, List<Passenger> passengers) {
-        return passengers
-            .stream()
-            .map(p -> {
-                Ticket ticket = new Ticket();
-                ticket.setFlightDate(flight.getDepartureTime());
-                ticket.setPassenger(p);
-                ticket.setTicketNumber(ReservationUtils.generateTicketNumber());
-                return ticket;
-            }).collect(Collectors.toList());
-    }
+
 
     private List<PassengerReservationResponse> convertPassengerToPassengerReservationResponse(Reservation reservation) {
         return reservation.getTickets().stream()
@@ -238,9 +249,11 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
                 PassengerReservationResponse p = new PassengerReservationResponse();
                 p.setFirstName(passenger.getFirstName());
                 p.setLastName(passenger.getLastName());
-                AddressResponse addr = new AddressResponse();
-                BeanUtils.copyProperties(passenger.getAddress(), addr);
-                p.setAddress(addr);
+                if (passenger.getAddress() != null) {
+                    AddressResponse addr = new AddressResponse();
+                    BeanUtils.copyProperties(passenger.getAddress(), addr);
+                    p.setAddress(addr);
+                }
                 p.getReservationCodes().add(reservation.getCode());
 
                 return p;

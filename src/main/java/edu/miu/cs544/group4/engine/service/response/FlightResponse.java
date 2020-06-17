@@ -13,6 +13,7 @@ import java.util.Date;
 public class FlightResponse implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer capacity;
+    private Integer availableSeats;
     private String flightNumber;
     private Date departureTime;
     private Date arrivalTime;
