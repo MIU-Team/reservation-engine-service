@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import edu.miu.common.exception.ResourceNotFoundException;
 import edu.miu.cs544.group4.engine.controller.AdminController;
 import edu.miu.cs544.group4.engine.model.Address;
 import edu.miu.cs544.group4.engine.model.Airline;
@@ -50,14 +49,14 @@ public class AirlineControllerTesting {
 
     
     @Test
-    void testSaveAirline() throws ResourceNotFoundException{
+    void testSaveAirline() {
         when(airlineService.saveAirline(airlines.get(1))).thenReturn(airlines.get(1));
         assertEquals(airlines.get(1), adminController.saveAirline(airlines.get(1)));
         verify(airlineService).saveAirline(airlines.get(1));
     }   
     
     @Test
-    void testGetAirline() throws ResourceNotFoundException{
+    void testGetAirline() {
     when(airlineService.getAirlineById(airlines.get(1).getId())).thenReturn(airlines.get(1));
         assertEquals(airlines.get(1), adminController.getAirline(airlines.get(1).getId()));
         verify(airlineService).getAirlineById(airlines.get(1).getId());
