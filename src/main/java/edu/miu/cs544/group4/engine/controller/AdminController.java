@@ -43,49 +43,49 @@ public class AdminController extends BaseReservationController {
 
 	// Airline APIs
 	@GetMapping("/airline/view/all")
-	public List<Airline> allAirlines() throws ResourceNotFoundException {
+	public List<Airline> allAirlines()  {
 		return airlineService.getAllAirline();
 	}
 
 	@GetMapping("/airline/view/id/{id}")
-	public Airline getAirline(@PathVariable Integer id) throws ResourceNotFoundException{
+	public Airline getAirline(@PathVariable Integer id){
 		return airlineService.getAirlineById(id);
 	}
 
 	@GetMapping("/airline/view/name")
-	public List<Airline> getByNameAirline(@RequestParam String name) throws ResourceNotFoundException {
+	public List<Airline> getByNameAirline(@RequestParam String name) {
 		return airlineService.getAirlineByName(name);
 	}
 
 	// Saving Starts Here
 	@PostMapping(value = "/airline/save", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Airline saveAirline(@Valid @RequestBody Airline airline) throws ResourceNotFoundException{
+	public Airline saveAirline(@Valid @RequestBody Airline airline) {
 		airlineService.saveAirline(airline);
 		return airline;
 	}
 
 	// Deleting Starts here
 	@DeleteMapping("/airline/delete/id/{id}")
-	public String deleteAirlineById(@PathVariable Integer id) throws ResourceNotFoundException{
+	public String deleteAirlineById(@PathVariable Integer id) {
 		airlineService.removeAirlineById(id);
 		return "The Airline with Id " + id + " is deleted successfully";
 	}
 
 	@DeleteMapping("/airline/delete")
-	public String deleteAllAirlines() throws ResourceNotFoundException{
+	public String deleteAllAirlines(){
 		airlineService.removeAll();
 		return "All The Airline Data are Successfully Deleted";
 	}
 
 	@DeleteMapping("/airline/delete/name")
-	public String deleteAirlineByFName(@RequestParam String name) throws ResourceNotFoundException{
+	public String deleteAirlineByFName(@RequestParam String name) {
 		airlineService.removeAirlineByName(name);
 		return "The Airline with the name " + name + " is deleted successfully";
 	}
 
 	// Updating Starts here
 	@PutMapping("/airline/update/id/{id}")
-	public String updateAirlineById(@PathVariable Integer id,@Valid @RequestBody Airline airline) throws ResourceNotFoundException{
+	public String updateAirlineById(@PathVariable Integer id,@Valid @RequestBody Airline airline) {
 		airlineService.updateAirlineById(id, airline);
 		return "The Airline with Id " + id + " is Updated successfully";
 	}
