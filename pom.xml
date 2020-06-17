@@ -19,6 +19,14 @@
 		<spring-cloud.version>Hoxton.SR5</spring-cloud.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>common.base.service.repo</id>
+			<name>common-base-service</name>
+			<url>file://${project.basedir}/repo</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -68,11 +76,16 @@
 			</exclusions>
 		</dependency>
 		
+<!--		<dependency>-->
+<!--			<groupId>edu.miu.common</groupId>-->
+<!--			<artifactId>common-base-service</artifactId>-->
+<!--			<version>1.0.0-SNAPSHOT</version>-->
+<!--			<scope>compile</scope>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>edu.miu.common</groupId>
 			<artifactId>common-base-service</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
-			<scope>compile</scope>
 		</dependency>
     <dependency>
       <groupId>junit</groupId>
