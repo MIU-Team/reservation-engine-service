@@ -14,12 +14,17 @@ import java.io.Serializable;
 public class Customer implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String name;
     private String phoneNumber;
     private String email;
     @Enumerated(value = EnumType.STRING)
-    private Role role;
+    private Role role = Role.CUSTOMER;
+
+    public boolean isAgent() {
+        return Role.AGENT.equals(role);
+    }
 
 }
 

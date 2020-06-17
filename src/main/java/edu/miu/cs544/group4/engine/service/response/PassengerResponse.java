@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class PassengerResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer id;
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
