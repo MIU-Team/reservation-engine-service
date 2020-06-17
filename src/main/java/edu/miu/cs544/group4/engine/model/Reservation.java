@@ -36,6 +36,11 @@ import java.util.Set;
         @NamedQuery(
             name = "Reservation.getAllReservationByCustomerEmail",
             query = "SELECT r FROM Reservation r WHERE r.customer.email = :email"
+        ),
+        @NamedQuery(
+            name = "Reservation.getAllReservationsMatchTheDepartureTime",
+            query = "SELECT DISTINCT r FROM Reservation r JOIN r.flights f " +
+                "WHERE r.status = 'CONFIRMED' AND f.departureTime <= :departureTime"
         )
     }
 )

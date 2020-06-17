@@ -18,8 +18,10 @@ import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
 import edu.miu.cs544.group4.engine.service.response.AddressResponse;
 import edu.miu.cs544.group4.engine.service.response.PassengerReservationResponse;
+import edu.miu.cs544.group4.engine.service.response.PriorDepartureReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResponse;
 import edu.miu.cs544.group4.engine.service.response.ReservationResultResponse;
+import edu.miu.cs544.group4.engine.util.DateUtils;
 import edu.miu.cs544.group4.engine.util.ReservationUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -182,12 +185,43 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         return generateReservationResponse(reservation, confirmReservationRequest.getPassengers());
     }
 
+    @Override
+    public ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest) {
+        Reservation reservation = Optional
+            .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
+            .orElseThrow(() -> new IllegalArgumentException("Incorrect Reservation Code"));
+
+        Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
+            .filter(email -> email.equals(confirmReservationRequest.getEmail()))
+            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
+
+
+        if (CollectionUtils.isEmpty(confirmReservationRequest.getPassengers())) {
+            throw new BusinessException("Cannot confirm a reservation with no passengers");
+        }
+
+        return generateReservationResponse(reservation, confirmReservationRequest.getPassengers());
+    }
+
+    @Override
+    public List<PriorDepartureReservationResponse> get24HoursPriorDepartureReservations() {
+        return reservationRepository
+            .getAllReservationsMatchTheDepartureTime(DateUtils.generateFutureDate(1))
+            .stream()
+            .map(reservation -> new PriorDepartureReservationResponse(reservation.getCode(), reservation.getCustomer().getEmail()))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * All support methods should go here
+     */
+
     private ReservationResponse generateReservationResponse(Reservation reservation, List<Passenger> passengers) {
         List<Ticket> tickets = reservation.getFlights()
-            .stream()
-            .map(flight -> generateTickets(flight, passengers))
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
+                .stream()
+                .map(flight -> generateTickets(flight, passengers))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
         if (!reservation.canConfirm()) {
             throw new BusinessException("Cannot confirm reservation because it is either confirmed or cancelled");
         }
@@ -217,30 +251,6 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         flight.updateAvailableSeats(passengers.size());
         return tickets;
     }
-
-    @Override
-    public ReservationResponse agentConfirmReservation(ConfirmReservationRequest confirmReservationRequest) {
-        Reservation reservation = Optional
-            .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
-            .orElseThrow(() -> new IllegalArgumentException("Incorrect Reservation Code"));
-
-        Optional.ofNullable(reservation.getAgent()).map(Customer::getEmail)
-            .filter(email -> email.equals(confirmReservationRequest.getEmail()))
-            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
-
-
-        if (CollectionUtils.isEmpty(confirmReservationRequest.getPassengers())) {
-            throw new BusinessException("Cannot confirm a reservation with no passengers");
-        }
-
-        return generateReservationResponse(reservation, confirmReservationRequest.getPassengers());
-    }
-
-    /**
-     * All support methods should go here
-     */
-
-
 
     private List<PassengerReservationResponse> convertPassengerToPassengerReservationResponse(Reservation reservation) {
         return reservation.getTickets().stream()

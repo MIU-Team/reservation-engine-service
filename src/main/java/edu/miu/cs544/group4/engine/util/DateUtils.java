@@ -18,8 +18,8 @@ public class DateUtils {
     return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).minusDays(daysBefore).toInstant());
   }
 
-  public static Date generateFutureDate(int daysBefore) {
-    return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).plusDays(daysBefore).toInstant());
+  public static Date generateFutureDate(int daysAfter) {
+    return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).plusDays(daysAfter).toInstant());
   }
 
 
