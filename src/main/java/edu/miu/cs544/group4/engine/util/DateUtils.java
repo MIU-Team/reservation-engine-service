@@ -22,7 +22,9 @@ public class DateUtils {
     return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).plusDays(daysAfter).toInstant());
   }
 
-
+  public static Date now() {
+    return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+  }
 
   // "08/06/2009"
   public static Date formatDate(String dateString) {

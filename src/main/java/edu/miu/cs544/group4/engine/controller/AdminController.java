@@ -2,10 +2,12 @@ package edu.miu.cs544.group4.engine.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.miu.common.exception.ResourceNotFoundException;
+import edu.miu.cs544.group4.engine.configuration.CurrentUser;
 import edu.miu.cs544.group4.engine.model.Airline;
 import edu.miu.cs544.group4.engine.model.Airport;
 import edu.miu.cs544.group4.engine.service.AirlineService;
@@ -43,49 +46,49 @@ public class AdminController extends BaseReservationController {
 
 	// Airline APIs
 	@GetMapping("/airline/view/all")
-	public List<Airline> allAirlines()  {
+	public List<Airline> allAirlines() throws ResourceNotFoundException {
 		return airlineService.getAllAirline();
 	}
 
 	@GetMapping("/airline/view/id/{id}")
-	public Airline getAirline(@PathVariable Integer id){
+	public Airline getAirline(@PathVariable Integer id) throws ResourceNotFoundException{
 		return airlineService.getAirlineById(id);
 	}
 
 	@GetMapping("/airline/view/name")
-	public List<Airline> getByNameAirline(@RequestParam String name) {
+	public List<Airline> getByNameAirline(@RequestParam String name) throws ResourceNotFoundException {
 		return airlineService.getAirlineByName(name);
 	}
 
 	// Saving Starts Here
 	@PostMapping(value = "/airline/save", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public Airline saveAirline(@Valid @RequestBody Airline airline) {
+	public Airline saveAirline(@Valid @RequestBody Airline airline) throws ResourceNotFoundException{
 		airlineService.saveAirline(airline);
 		return airline;
 	}
 
 	// Deleting Starts here
 	@DeleteMapping("/airline/delete/id/{id}")
-	public String deleteAirlineById(@PathVariable Integer id) {
+	public String deleteAirlineById(@PathVariable Integer id) throws ResourceNotFoundException{
 		airlineService.removeAirlineById(id);
 		return "The Airline with Id " + id + " is deleted successfully";
 	}
 
 	@DeleteMapping("/airline/delete")
-	public String deleteAllAirlines(){
+	public String deleteAllAirlines() throws ResourceNotFoundException{
 		airlineService.removeAll();
 		return "All The Airline Data are Successfully Deleted";
 	}
 
 	@DeleteMapping("/airline/delete/name")
-	public String deleteAirlineByFName(@RequestParam String name) {
+	public String deleteAirlineByFName(@RequestParam String name) throws ResourceNotFoundException{
 		airlineService.removeAirlineByName(name);
 		return "The Airline with the name " + name + " is deleted successfully";
 	}
 
 	// Updating Starts here
 	@PutMapping("/airline/update/id/{id}")
-	public String updateAirlineById(@PathVariable Integer id,@Valid @RequestBody Airline airline) {
+	public String updateAirlineById(@PathVariable Integer id,@Valid @RequestBody Airline airline) throws ResourceNotFoundException{
 		airlineService.updateAirlineById(id, airline);
 		return "The Airline with Id " + id + " is Updated successfully";
 	}
@@ -107,7 +110,7 @@ public class AdminController extends BaseReservationController {
 		return airportService.getAirportByName(name);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, name = "airport/create")
+	@PostMapping("airport/create")
 	public AirportResponse CreateAirport(@Valid @RequestBody Airport airport) {
 		return airportService.create(airport);
 	}
@@ -118,7 +121,7 @@ public class AdminController extends BaseReservationController {
 		return airportService.update(id, request);
 	}
 
-	@GetMapping("airport/delete/{id}")
+	@DeleteMapping("airport/delete/{id}")
 	public boolean DeleteAirport(@PathVariable int id) throws ResourceNotFoundException {
 		return airportService.deleteAirport(id);
 	}
@@ -127,6 +130,11 @@ public class AdminController extends BaseReservationController {
 	@GetMapping("flight/list")
 	public List<FlightResponse> listFlights() {
 		return flightService.findAll();
+	}
+	
+	@GetMapping("flight/view/{number}")
+	public List<FlightResponse> getFlightByName(@PathVariable String number) throws ResourceNotFoundException {
+		return flightService.getFlightByNumber(number);
 	}
 
 	@PostMapping("flight/create")
@@ -140,8 +148,8 @@ public class AdminController extends BaseReservationController {
 		return flightService.update(id, request);
 	}
 
-	@GetMapping("flight/delete/{id}")
-	public boolean DeleteFlight(@PathVariable int id) throws ResourceNotFoundException {
+	@DeleteMapping("flight/delete/{id}")
+	public String DeleteFlight(@PathVariable int id) throws ResourceNotFoundException {
 		return flightService.deleteFlight(id);
 	}
     

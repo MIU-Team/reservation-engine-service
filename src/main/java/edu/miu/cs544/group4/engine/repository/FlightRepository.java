@@ -13,4 +13,6 @@ public interface FlightRepository extends BaseRepository<Flight, Integer> {
 
   List<Flight> getFlightsOnRoute(String originCode, String destinationCode);
   Flight findTopByFlightNumberOrderByDepartureTimeDesc(String flightNumber);
+  List<Flight> findByFlightNumber(String flightNumber);
+  
 }

@@ -30,12 +30,12 @@ public class BaseReservationController {
   @Autowired
   private FlightService flightService;
 
-  @RequestMapping("/all-airports")
+  @GetMapping("/all-airports")
   public List<AirportResponse> getAllAirports() {
     return airportService.findAll();
   }
 
-  @RequestMapping("/all-airlines/{code}")
+  @GetMapping("/all-airlines/{code}")
   public List<AirlineResponse> getAirlinesOutOfAnAirport(@PathVariable String code) {
     return airlineService.findAirlinesOutOfAnAirport(code);
   }

@@ -13,80 +13,70 @@ import java.util.Optional;
 @Service
 public class AirlineServiceImpl extends BaseReadWriteServiceImpl<AirlineResponse, Airline, Integer> implements AirlineService {
 
-  @Autowired
-  private AirlineRepository airlineRepository;
+    @Autowired
+    private AirlineRepository airlineRepository;
 
-  @Override
-  public AirlineResponse create(Airline airline) {
-    return convertEntityToResponse(baseRepository.save(airline));
-  }
+    @Override
+    public AirlineResponse create(Airline airline) {
+        return convertEntityToResponse(baseRepository.save(airline));
+    }
 
-  @Override
-  public List<AirlineResponse> findAirlinesOutOfAnAirport(String code) {
-    return convertEntityListToResponseList(airlineRepository.findAirlinesOutOfAnAirport(code));
-  }
+    @Override
+    public List<AirlineResponse> findAirlinesOutOfAnAirport(String code) {
+        return convertEntityListToResponseList(airlineRepository.findAirlinesOutOfAnAirport(code));
+    }
 
-@Override
-public List<Airline> getAllAirline() {
-	
-	return airlineRepository.findAll();
-}
+    @Override
+    public List<Airline> getAllAirline() {
+        return airlineRepository.findAll();
+    }
 
-@Override
-public Airline getAirlineById(Integer id) {
-	
-	return airlineRepository.findById(id).get();
-}
-
-
-@Override
-public Airline getOneAirlineById(Integer id) {
-	
-	return airlineRepository.getOne(id);
-}
-
-@Override
-public List<Airline> getAirlineByName(String name) {
-	return airlineRepository.findByName(name);
-}
+    @Override
+    public Airline getAirlineById(Integer id) {
+        return airlineRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid flight Id: " + id));
+    }
 
 
-@Override
-public Airline saveAirline(Airline airline) {
-	return airlineRepository.save(airline);
-	
-}
+    @Override
+    public Airline getOneAirlineById(Integer id) {
 
-@Override
-public void removeAirlineById(Integer id) {
-	airlineRepository.deleteById(id);
-	
-}
+        return airlineRepository.getOne(id);
+    }
 
-@Override
-public void removeAll() {
-	airlineRepository.deleteAll();
-	
-}
+    @Override
+    public List<Airline> getAirlineByName(String name) {
+        return airlineRepository.findByName(name);
+    }
 
-@Override
-public void removeAirlineByName(String name) {
-	airlineRepository.deleteByName(name);
-	
-}
 
-@Override
-public void updateAirlineById(Integer id, Airline airline) {
-	airlineRepository.updateAirline(id, airline);
-}
+    @Override
+    public Airline saveAirline(Airline airline) {
+        return airlineRepository.save(airline);
 
-@Override
-public void updateAirlineByName(String name, Airline airline) {
-//	Airline u = airlineRepository.findByName(name);
-//	u.setName(airline.getName());
-//	u.setCode(airline.getCode());
-	
-}
+    }
 
+    @Override
+    public void removeAirlineById(Integer id) {
+        airlineRepository.deleteById(id);
+
+    }
+
+    @Override
+    public void removeAll() {
+        airlineRepository.deleteAll();
+
+    }
+
+    @Override
+    public void removeAirlineByName(String name) {
+        airlineRepository.deleteByName(name);
+
+    }
+
+    @Override
+    public void updateAirlineById(Integer id, Airline airline) {
+        airlineRepository.updateAirline(id, airline);
+    }
 
 }

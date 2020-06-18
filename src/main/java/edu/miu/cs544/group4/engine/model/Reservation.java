@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -36,12 +35,12 @@ import java.util.Set;
     {
         @NamedQuery(
             name = "Reservation.getAllReservationByCustomerEmail",
-            query = "SELECT r FROM Reservation r WHERE r.customer.email = :email"
+            query = "SELECT r FROM Reservation r WHERE r.customerEmail = :email"
         ),
         @NamedQuery(
             name = "Reservation.getAllReservationsMatchTheDepartureTime",
             query = "SELECT DISTINCT r FROM Reservation r JOIN r.flights f " +
-                "WHERE r.status = 'CONFIRMED' AND f.departureTime <= :departureTime"
+                "WHERE r.status = 'CONFIRMED' AND f.departureTime BETWEEN :fromDate AND :toDate"
         )
     }
 )
@@ -57,14 +56,8 @@ public class Reservation implements Serializable {
     private Date reservationTime;
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<Ticket> tickets = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-
-    @ManyToOne
-    @JoinColumn(name = "agent_id")
-    private Customer agent;
+    private String customerEmail;
+    private String agentEmail;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

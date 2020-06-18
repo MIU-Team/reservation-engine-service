@@ -1,6 +1,5 @@
 package edu.miu.cs544.group4.engine.service.request;
 
-import edu.miu.cs544.group4.engine.model.Customer;
 import lombok.Data;
 import lombok.ToString;
 
@@ -17,8 +16,6 @@ public class ReservationRequest {
   @NotBlank(message = "Name is mandatory")
   private String name;
   private String email;
-  private String phoneNumber;
-  private CustomerRequest customerRequest;
-  @NotEmpty(message = "Reservation should have atleast one FlightNumber")
+  @NotEmpty(message = "Reservation should contained at least one FlightNumber")
   private List<String> flightNumbers;
 }
