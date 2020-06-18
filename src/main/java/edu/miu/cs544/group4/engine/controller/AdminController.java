@@ -46,13 +46,7 @@ public class AdminController extends BaseReservationController {
 
 	// Airline APIs
 	@GetMapping("/airline/view/all")
-	public List<Airline> allAirlines(HttpServletRequest request) throws ResourceNotFoundException {
-		//TODO: to be removed
-		String email = CurrentUser.getEmail(request);
-		System.out.println("email" + email);
-		String name = CurrentUser.getUsername(request);
-		System.out.println("name" + name);
-		
+	public List<Airline> allAirlines() throws ResourceNotFoundException {
 		return airlineService.getAllAirline();
 	}
 

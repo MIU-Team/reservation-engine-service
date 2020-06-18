@@ -15,7 +15,6 @@ import java.util.List;
 public class ReservationRequest {
   @NotBlank(message = "Name is mandatory")
   private String name;
-  @NotBlank(message = "Email is mandatory")
   private String email;
   @NotEmpty(message = "Reservation should contained at least one FlightNumber")
   private List<String> flightNumbers;
