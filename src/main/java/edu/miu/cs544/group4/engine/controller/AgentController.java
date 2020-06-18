@@ -30,9 +30,9 @@ public class AgentController extends BaseReservationController {
         return reservationService.getAgentReservationsByEmail(CurrentUser.getEmail(request));
     }
 
-    @GetMapping("/passenger-reservations/{email}")
-    public List<PassengerReservationResponse> getAllAgentPassengersAndTheirReservations(@PathVariable String email) {
-        return reservationService.getAllAgentPassengersAndTheirReservations(email);
+    @GetMapping("/passenger-reservations")
+    public List<PassengerReservationResponse> getAllAgentPassengersAndTheirReservations(HttpServletRequest request) {
+        return reservationService.getAllAgentPassengersAndTheirReservations(CurrentUser.getEmail(request));
     }
 
     @PutMapping("/reservations")
