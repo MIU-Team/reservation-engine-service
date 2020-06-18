@@ -18,7 +18,7 @@ public class FlightReminder {
     private RabbitTemplate rabbitTemplate;
     private ReservationService reservationService;
     private static final String MSG = "This is the Flight Reminder. Your reservation has flight(s) will departure " +
-        "soon within next 24 hours. \\nPlease check the Reservation with code %s to view the Flight details.";
+        "soon within next 24 hours. Please check the Reservation with code %s to view the Flight details.";
 
     @Autowired
     public FlightReminder(RabbitTemplate rabbitTemplate, ReservationService reservationService) {
@@ -27,7 +27,7 @@ public class FlightReminder {
         this.rabbitTemplate.setExchange("reservation-service-exchange");
     }
 
-    //@Scheduled(cron = "0/10 * * * * *") //every 10 seconds
+    @Scheduled(cron = "0/20 * * * * *") //every 20 seconds
     //@Scheduled(cron = "* * 12 * * *") //every 12 hours
     public void checkFlightReminder() {
         Map<String, String> data = new HashMap<>();

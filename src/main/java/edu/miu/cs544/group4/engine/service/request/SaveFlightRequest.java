@@ -15,7 +15,6 @@ public class SaveFlightRequest {
 
 	@Positive(message = "Flight capacity should be more than zero")
 	private Integer capacity;
-	@NotBlank(message = "Number of available seats is mandatory")
 	private Integer availableSeats;
 	@NotBlank(message = "Flight number is mandatory")
 	@Size(max = 4, message = "Flight number should be 4 charachters")

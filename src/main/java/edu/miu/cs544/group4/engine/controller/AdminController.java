@@ -116,7 +116,7 @@ public class AdminController extends BaseReservationController {
 		return airportService.getAirportByName(name);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, name = "airport/create")
+	@PostMapping("airport/create")
 	public AirportResponse CreateAirport(@Valid @RequestBody Airport airport) {
 		return airportService.create(airport);
 	}
