@@ -17,6 +17,7 @@ public interface FlightService extends BaseReadWriteService<FlightResponse, Flig
 	List<FlightResponse> getFlightsOnRouteAndDate(FlightRequest flightRequest);
 
 	List<FlightResponse> getFlightsOnRoute(FlightRequest flightRequest);
+	List<FlightResponse> getFlightByNumber(String flightNumber);
 
-	boolean deleteFlight(int id);
+	String deleteFlight(int id);
 }
