@@ -17,8 +17,6 @@ public class ReservationRequest {
   private String name;
   @NotBlank(message = "Email is mandatory")
   private String email;
-  @NotBlank(message = "Customer Email is mandatory")
-  private String customerEmail;
   @NotEmpty(message = "Reservation should contained at least one FlightNumber")
   private List<String> flightNumbers;
 }

@@ -1,6 +1,7 @@
 package edu.miu.cs544.group4.engine.controller;
 
 import edu.miu.cs544.group4.engine.service.ReservationService;
+import edu.miu.cs544.group4.engine.service.request.AgentReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.CancelReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
@@ -34,7 +35,7 @@ public class AgentController extends BaseReservationController {
     }
 
     @PutMapping("/reservations")
-    public ReservationResultResponse makeReservation(@Valid @RequestBody ReservationRequest request) {
+    public ReservationResultResponse makeReservation(@Valid @RequestBody AgentReservationRequest request) {
         return reservationService.makeAgentReservation(request);
     }
 

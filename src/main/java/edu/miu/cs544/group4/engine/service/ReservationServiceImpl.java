@@ -9,6 +9,7 @@ import edu.miu.cs544.group4.engine.model.Ticket;
 import edu.miu.cs544.group4.engine.repository.FlightRepository;
 import edu.miu.cs544.group4.engine.repository.ReservationRepository;
 import edu.miu.cs544.group4.engine.service.mapper.FlightResponseMapper;
+import edu.miu.cs544.group4.engine.service.request.AgentReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.CancelReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ConfirmReservationRequest;
 import edu.miu.cs544.group4.engine.service.request.ReservationRequest;
@@ -116,14 +117,14 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
         prepareReservationData(request, flights, invalidFlights);
 
         Reservation reservation = new Reservation();
-        reservation.setCustomerEmail(request.getCustomerEmail());
+        reservation.setCustomerEmail(request.getEmail());
         reservation.setFlights(flights);
         reservation.setCode(ReservationUtils.generateReservationCode());
         return convertToReservationResultResponse(reservationRepository.save(reservation), invalidFlights);
     }
 
     @Override
-    public ReservationResultResponse makeAgentReservation(ReservationRequest request) {
+    public ReservationResultResponse makeAgentReservation(AgentReservationRequest request) {
         List<String> invalidFlights = new ArrayList<>();
         Set<Flight> flights = new HashSet<>();
 

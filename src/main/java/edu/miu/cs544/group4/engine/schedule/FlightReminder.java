@@ -18,7 +18,7 @@ public class FlightReminder {
     private RabbitTemplate rabbitTemplate;
     private ReservationService reservationService;
     private static final String MSG = "This is the Flight Reminder. Your reservation has flight(s) will departure " +
-        "soon within next 24 hours. \\nPlease check the Reservation with code %s to view the Flight details.";
+        "soon within next 24 hours. Please check the Reservation with code %s to view the Flight details.";
 
     @Autowired
     public FlightReminder(RabbitTemplate rabbitTemplate, ReservationService reservationService) {
