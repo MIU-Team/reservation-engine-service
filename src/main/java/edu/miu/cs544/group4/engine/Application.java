@@ -46,7 +46,7 @@ public class Application {
 	 * Un-comment the @Bean to create the dummy data.
 	 * Also make sure un-comment "ddl-auto: create" in the application.yml
 	 */
-	@Bean
+	//@Bean
 	public void testRepository() {
 		History history = new History();
 		history.setDescription("There is nothing such history");

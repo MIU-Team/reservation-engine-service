@@ -143,7 +143,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
             .ofNullable(reservationRepository.findByCode(confirmReservationRequest.getReservationCode()))
             .orElseThrow(() -> new IllegalArgumentException("Incorrect Reservation Code"));
 
-        Optional.ofNullable(reservation.getAgentEmail())
+        Optional.ofNullable(reservation.getCustomerEmail())
             .filter(email -> email.equals(confirmReservationRequest.getEmail()))
             .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
 
