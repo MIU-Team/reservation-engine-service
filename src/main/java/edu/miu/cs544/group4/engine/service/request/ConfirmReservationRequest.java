@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 @ToString
 public class ConfirmReservationRequest {
-    @NotBlank(message = "Email is mandatory")
     private String email;
     @NotBlank(message = "Reservation code is mandatory")
     private String reservationCode;
