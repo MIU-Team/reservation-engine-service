@@ -28,7 +28,7 @@ public class PassengerController extends BaseReservationController {
   @Autowired
   private ReservationService reservationService;
 
-  @GetMapping("/reservations/{email}")
+  @GetMapping("/reservations")
   public List<ReservationResponse> getAllReservations(@PathVariable String email) {
     return reservationService.getAllReservationsByEmail(email);
   }

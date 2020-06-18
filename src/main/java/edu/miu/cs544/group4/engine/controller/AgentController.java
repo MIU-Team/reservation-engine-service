@@ -29,6 +29,7 @@ public class AgentController extends BaseReservationController {
 
     @GetMapping("/passenger-reservations/{email}")
     public List<PassengerReservationResponse> getAllAgentPassengersAndTheirReservations(@PathVariable String email) {
+
         return reservationService.getAllAgentPassengersAndTheirReservations(email);
     }
 

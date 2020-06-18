@@ -27,7 +27,7 @@ public class FlightReminder {
         this.rabbitTemplate.setExchange("reservation-service-exchange");
     }
 
-    //@Scheduled(cron = "0/10 * * * * *") //every 10 seconds
+    @Scheduled(cron = "0/10 * * * * *") //every 10 seconds
     //@Scheduled(cron = "* * 12 * * *") //every 12 hours
     public void checkFlightReminder() {
         Map<String, String> data = new HashMap<>();

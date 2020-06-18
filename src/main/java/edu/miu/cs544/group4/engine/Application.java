@@ -3,16 +3,13 @@ package edu.miu.cs544.group4.engine;
 import edu.miu.cs544.group4.engine.model.Address;
 import edu.miu.cs544.group4.engine.model.Airline;
 import edu.miu.cs544.group4.engine.model.Airport;
-import edu.miu.cs544.group4.engine.model.Customer;
 import edu.miu.cs544.group4.engine.model.Flight;
 import edu.miu.cs544.group4.engine.model.History;
 import edu.miu.cs544.group4.engine.model.Passenger;
 import edu.miu.cs544.group4.engine.model.Reservation;
-import edu.miu.cs544.group4.engine.model.Role;
 import edu.miu.cs544.group4.engine.model.Ticket;
 import edu.miu.cs544.group4.engine.repository.AirlineRepository;
 import edu.miu.cs544.group4.engine.repository.AirportRepository;
-import edu.miu.cs544.group4.engine.repository.CustomerRepository;
 import edu.miu.cs544.group4.engine.repository.FlightRepository;
 import edu.miu.cs544.group4.engine.repository.ReservationRepository;
 import edu.miu.cs544.group4.engine.util.DateUtils;
@@ -44,14 +41,12 @@ public class Application {
 	AirlineRepository airlineRepository;
 	@Autowired
 	AirportRepository airportRepository;
-	@Autowired
-	CustomerRepository customerRepository;
 
 	/**
 	 * Un-comment the @Bean to create the dummy data.
 	 * Also make sure un-comment "ddl-auto: create" in the application.yml
 	 */
-//	@Bean
+	@Bean
 	public void testRepository() {
 		History history = new History();
 		history.setDescription("There is nothing such history");
@@ -119,14 +114,6 @@ public class Application {
 		passenger2.setFirstName("Samuel");
 		passenger2.setLastName("Bwambale");
 
-		Customer customer = new Customer();
-		customer.setEmail("khanh@gmail.com");
-		customer.setPhoneNumber("83638483463846");
-		customer.setRole(Role.CUSTOMER);
-		customerRepository.save(customer);
-
-
-
 		Ticket ticket = new Ticket();
 		ticket.setPassenger(passenger);
 		ticket.setTicketNumber(ReservationUtils.generateTicketNumber());
@@ -141,24 +128,12 @@ public class Application {
 
 		Reservation reservation = new Reservation();
 		reservation.setCode(ReservationUtils.generateReservationCode());
-		reservation.setCustomer(customer);
+		reservation.setCustomerEmail("khanh@gmail.com");
 		reservation.addTickets(Arrays.asList(ticket, ticket2));
 
 		reservationRepository.save(reservation);
 
 		Reservation reservation2 = new Reservation();
-		Customer customer2 = new Customer();
-		customer2.setEmail("agent@gmail.com");
-		customer2.setPhoneNumber("5678900345");
-		customer2.setRole(Role.AGENT);
-		customerRepository.save(customer2);
-
-		Customer customer3 = new Customer();
-		customer3.setEmail("customer@gmail.com");
-		customer3.setPhoneNumber("77777777");
-		customer3.setRole(Role.CUSTOMER);
-		customerRepository.save(customer3);
-
 		Passenger passenger3 = new Passenger();
 		passenger3.setFirstName("Salek");
 		passenger3.setLastName("Payman");
@@ -170,8 +145,8 @@ public class Application {
 		ticket3.setFlight(flight);
 
 		reservation2.setCode(ReservationUtils.generateReservationCode());
-		reservation2.setAgent(customer2);
-		reservation2.setCustomer(customer3);
+		reservation2.setAgentEmail("agent@gmail.com");
+		reservation2.setCustomerEmail("customer@gmail.com");
 		reservation2.addTickets(Arrays.asList(ticket3));
 		reservationRepository.save(reservation2);
 	}
