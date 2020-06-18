@@ -118,7 +118,7 @@ public class AdminController extends BaseReservationController {
 		return airportService.update(id, request);
 	}
 
-	@GetMapping("airport/delete/{id}")
+	@DeleteMapping("airport/delete/{id}")
 	public boolean DeleteAirport(@PathVariable int id) throws ResourceNotFoundException {
 		return airportService.deleteAirport(id);
 	}
@@ -127,6 +127,11 @@ public class AdminController extends BaseReservationController {
 	@GetMapping("flight/list")
 	public List<FlightResponse> listFlights() {
 		return flightService.findAll();
+	}
+	
+	@GetMapping("flight/view/{number}")
+	public List<FlightResponse> getFlightByName(@PathVariable String number) throws ResourceNotFoundException {
+		return flightService.getFlightByNumber(number);
 	}
 
 	@PostMapping("flight/create")
@@ -140,8 +145,8 @@ public class AdminController extends BaseReservationController {
 		return flightService.update(id, request);
 	}
 
-	@GetMapping("flight/delete/{id}")
-	public boolean DeleteFlight(@PathVariable int id) throws ResourceNotFoundException {
+	@DeleteMapping("flight/delete/{id}")
+	public String DeleteFlight(@PathVariable int id) throws ResourceNotFoundException {
 		return flightService.deleteFlight(id);
 	}
     

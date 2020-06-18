@@ -79,13 +79,4 @@ public class AirlineServiceImpl extends BaseReadWriteServiceImpl<AirlineResponse
         airlineRepository.updateAirline(id, airline);
     }
 
-    @Override
-    public void updateAirlineByName(String name, Airline airline) {
-//	Airline u = airlineRepository.findByName(name);
-//	u.setName(airline.getName());
-//	u.setCode(airline.getCode());
-
-    }
-
-
 }
