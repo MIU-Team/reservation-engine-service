@@ -68,9 +68,9 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 	}
 
 	@Override
-	public boolean deleteFlight(int id) {
-		flightRepository.deleteById(id);
-		return true;
+	public String deleteFlight(int id) {
+		 flightRepository.deleteById(id);
+		return "Flight Deleted Successfully";
 	}
 
 	private Flight prepareFlightData(SaveFlightRequest request, Flight flight) {
@@ -86,5 +86,11 @@ public class FlightServiceImpl extends BaseReadWriteServiceImpl<FlightResponse, 
 		flight.setDestination(airportRepository.findById(request.getDestinationAirportId())
 			.orElseThrow(() -> new IllegalArgumentException("Invalid Destination Airport")));
 		return flight;
+	}
+
+	@Override
+	public List<FlightResponse> getFlightByNumber(String flightNumber) {
+		return convertEntityListToResponseList(
+				flightRepository.findByFlightNumber(flightNumber));
 	}
 }

@@ -98,7 +98,7 @@ public class ReservationServiceImpl extends BaseReadWriteServiceImpl<Reservation
 
         Optional.ofNullable(reservation.getAgentEmail())
             .filter(email -> email.equals(request.getEmail()))
-            .orElseThrow(() -> new BusinessException("Cannot confirm a reservation that was not made by you"));
+            .orElseThrow(() -> new BusinessException("Cannot cancel a reservation that was not made by you"));
 
 
         if (!reservation.canCancel()) {
