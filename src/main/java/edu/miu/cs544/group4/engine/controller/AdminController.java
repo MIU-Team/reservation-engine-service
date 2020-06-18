@@ -2,10 +2,12 @@ package edu.miu.cs544.group4.engine.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.miu.common.exception.ResourceNotFoundException;
+import edu.miu.cs544.group4.engine.configuration.CurrentUser;
 import edu.miu.cs544.group4.engine.model.Airline;
 import edu.miu.cs544.group4.engine.model.Airport;
 import edu.miu.cs544.group4.engine.service.AirlineService;
@@ -43,7 +46,13 @@ public class AdminController extends BaseReservationController {
 
 	// Airline APIs
 	@GetMapping("/airline/view/all")
-	public List<Airline> allAirlines() throws ResourceNotFoundException {
+	public List<Airline> allAirlines(HttpServletRequest request) throws ResourceNotFoundException {
+		//TODO: to be removed
+		String email = CurrentUser.getEmail(request);
+		System.out.println("email" + email);
+		String name = CurrentUser.getUsername(request);
+		System.out.println("name" + name);
+		
 		return airlineService.getAllAirline();
 	}
 
