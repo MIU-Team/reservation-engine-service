@@ -92,6 +92,7 @@ public class Application {
 		flight.setAirline(airline);
 		flight.setFlightNumber("2324");
 		flight.setCapacity(100);
+		flight.setAvailableSeats(100);
 		flight.setDepartureTime(DateUtils.generatePastDate(29));
 		flight.setArrivalTime(DateUtils.generatePastDate(28));
 		flight.setDestination(arrivalAirport);
